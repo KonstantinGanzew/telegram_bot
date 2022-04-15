@@ -3,7 +3,7 @@ import apiclient.discovery
 from oauth2client.service_account import ServiceAccountCredentials
 
 def open_driveID():
-    CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\telegabot\\telebot\\creeds.json'
+    CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
     # ID Google Sheets документа (можно взять из его URL)
     spreadsheet_id = '1TLIT1BHPWw-00tF8PNHdyny1FJp5OAQB2ukXiUmyY-0'
 
