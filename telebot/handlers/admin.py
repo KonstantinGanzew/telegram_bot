@@ -11,6 +11,7 @@ async def command_manager(message: types.Message):
         await bot.send_message(message.from_user.id, 'Необходимо нажать на опубликовать!!', reply_markup=kb_admin)
 
 
+
 # Регистрируем комманды
 def register_handlers_admin(dp: Dispatcher):
     dp.register_message_handler(command_manager, commands=['manager'])

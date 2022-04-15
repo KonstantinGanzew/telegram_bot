@@ -3,7 +3,7 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Command, Text
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from create_bot import dp, bot
-from keyboards import kb_client, kb_direct
+from keyboards import kb_answer
 from handlers import news, company, direct, docks, EBITDA, person
 from googleDisk import google_test
 
@@ -19,7 +19,9 @@ async def command_start(message: types.Message):
             могут определиться как меня называть. Они мне сказали, что\n\
             важно мнение каждого сотрудника и попросили спросить у\n\
             тебя. Отправь, пожалуйста, свой вариант моего имени ответом \n\
-            на это сообщение.')
+            на это сообщение.', reply_markup=kb_answer)
+
+@dp.message_handler(Text(equals=['Ответить']))
 
 
 # Регистрируем комманды

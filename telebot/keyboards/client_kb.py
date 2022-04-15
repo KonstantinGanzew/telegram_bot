@@ -49,3 +49,6 @@ for item in dir_send_key:
 
 kb_admin = ReplyKeyboardMarkup(resize_keyboard=True)
 kb_admin.add('Опубликовать новость')
+
+kb_answer = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_answer.add('Ответить')
