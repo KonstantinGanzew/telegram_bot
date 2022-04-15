@@ -3,8 +3,6 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Command, Text
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from create_bot import dp, bot
-from keyboards import kb_answer
-from handlers import news, company, direct, docks, EBITDA, person
 from googleDisk import google_test
 
 
@@ -13,15 +11,7 @@ aut_id.append(225923687)
 
 # Обрабатываем комманды
 async def command_start(message: types.Message):
-    for item in aut_id:
-        await bot.send_message(item, 'Привет👋\n\
-            Я твой виртуальный помощник 🤖. Мои разработчики не\n\
-            могут определиться как меня называть. Они мне сказали, что\n\
-            важно мнение каждого сотрудника и попросили спросить у\n\
-            тебя. Отправь, пожалуйста, свой вариант моего имени ответом \n\
-            на это сообщение.', reply_markup=kb_answer)
-
-@dp.message_handler(Text(equals=['Ответить']))
+    await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @lisenokstr Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}')
 
 
 # Регистрируем комманды

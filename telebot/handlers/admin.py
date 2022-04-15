@@ -7,7 +7,7 @@ from googleDisk import google_test
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
-import name_variation
+from handlers import name_variation
 
 
 async def command_manager(message: types.Message):
