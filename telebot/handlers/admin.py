@@ -17,21 +17,19 @@ async def command_manager(message: types.Message):
 @dp.message_handler(Text(equals=['Опубликовать новость']))
 async def public_message(message: types.Message):
     for item in google_test.open_driveID():
-        await bot.send_message(item, 'Привет👋\n\
-            Я твой виртуальный помощник 🤖. Мои разработчики не\n\
-            могут определиться как меня называть. Они мне сказали, что\n\
-            важно мнение каждого сотрудника и попросили спросить у\n\
-            тебя. Отправь, пожалуйста, свой вариант моего имени ответом \n\
-            на это сообщение.', reply_markup=kb_answer)
+        await bot.send_message(item, 'Привет👋\nЯ твой виртуальный помощник 🤖. Мои разработчики не\nмогут определиться как меня называть. Они мне сказали, что\nважно мнение каждого сотрудника и попросили спросить у\nтебя. Отправь, пожалуйста, свой вариант моего имени ответом \nна это сообщение.', reply_markup=kb_answer)
 
 @dp.message_handler(Text(equals=['Ответить']), state=None)
 async def take_first_state(message: types.Message):
-    await name_variation.var_name.set()
+    await name_variation.var_name.name.set()
 
 
 @dp.message_handler(state=name_variation.var_name)
 async def down_answer_to_disk(message: types.Message, state: FSMContext):
-    google_test.down_drive(message.chat.first_name, message.chat.username, message.text)
+    first_name = str(message.chat.first_name)
+    username = str(message.chat.username)
+    text = str(message.text)
+    google_test.down_drive(first_name, username, text)
     await message.answer("Спасибо за ваши ответы!", reply_markup=ReplyKeyboardRemove())
     await state.finish()
 
