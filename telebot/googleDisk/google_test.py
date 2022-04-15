@@ -30,7 +30,7 @@ def open_driveID():
     return values
 
 # Заносим пожудание на диск
-def down_drive():
+def down_drive(list):
     CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
     # ID Google Sheets документа (можно взять из его URL)
     spreadsheet_id = '1gqmdEgkMGGo6XHB4l0akIUkQN7ExZJGHh797fGS6l0E'
@@ -43,7 +43,6 @@ def down_drive():
     httpAuth = credentials.authorize(httplib2.Http())
     service = apiclient.discovery.build('sheets', 'v4', http = httpAuth)
 
-    list = [["valuea1"], ["valuea2"], ["valuea3"]]
     resource = {
         "majorDimension": "COLUMNS",
         "values": list
@@ -55,5 +54,3 @@ def down_drive():
         body=resource,
         valueInputOption="USER_ENTERED"
     ).execute()
-
-down_drive()
