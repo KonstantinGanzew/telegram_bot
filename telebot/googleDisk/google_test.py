@@ -18,7 +18,7 @@ def open_driveID():
     # Читаем файл и заполняем кортеж идшниками
     values = service.spreadsheets().values().get(
         spreadsheetId=spreadsheet_id,
-        range='F1:F1000',
+        range='A81',
         majorDimension='ROWS'
     ).execute()
     val = values.pop('values')
