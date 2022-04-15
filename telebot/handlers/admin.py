@@ -7,6 +7,7 @@ from googleDisk import google_test
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
+import name_variation
 
 
 async def command_manager(message: types.Message):
@@ -25,7 +26,14 @@ async def public_message(message: types.Message):
 
 @dp.message_handler(Text(equals=['Ответить']), state=None)
 async def take_first_state(message: types.Message):
-    pass
+    await name_variation.var_name.set()
+
+
+@dp.message_handler(state=name_variation.var_name)
+async def down_answer_to_disk(message: types.Message, state: FSMContext):
+    google_test.down_drive(message.chat.first_name, message.chat.username, message.text)
+    await message.answer("Спасибо за ваши ответы!", reply_markup=ReplyKeyboardRemove())
+    await state.finish()
 
 
 # Регистрируем комманды
