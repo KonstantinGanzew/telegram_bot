@@ -9,6 +9,12 @@ async def command_person(message: types.Message):
     await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_person)
     await message.delete()
 
+
+@dp.message_handler(Text(equals='🔍 Сотрудники компании'))
+async def search_employees(message: types.Message):
+    pass
+
+
 @dp.message_handler(Text(equals='🈺 Вакансии компании'))
 async def vac(message: types.Message):
     vacancy = parse(True)

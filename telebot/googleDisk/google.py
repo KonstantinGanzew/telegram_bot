@@ -53,15 +53,17 @@ def open_list_employees(name_key):
     ).execute()
 
     val = values.pop('values')
+    values = []
     for item in val:
+        s = ''
         for i in item:
-            if i == name_key:
-                return item
+            s  += i.strip().lower() + ' '
+        if s.find(name_key.lower()) != -1:
+            values.append(item)
+        s = ''
 
     return values
 
-
-print(*open_list_employees('Бурдаев'))
 
 # Заносим пожудание на диск
 def down_drive(first_name, username, text):
