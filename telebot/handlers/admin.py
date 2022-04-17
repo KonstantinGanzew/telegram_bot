@@ -13,11 +13,16 @@ from handlers import name_variation
 async def command_manager(message: types.Message):
     if message.from_user.id == 225923687:
         await bot.send_message(message.from_user.id, 'Необходимо нажать на опубликовать!!', reply_markup=kb_admin)
+    else:
+        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @lisenokstr Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}')
 
 @dp.message_handler(Text(equals=['Опубликовать новость']))
 async def public_message(message: types.Message):
     for item in google_test.open_driveID():
-        await bot.send_message(item, 'Привет👋\nЯ твой виртуальный помощник 🤖. Мои разработчики не\nмогут определиться как меня называть. Они мне сказали, что\nважно мнение каждого сотрудника и попросили спросить у\nтебя. Отправь, пожалуйста, свой вариант моего имени ответом \nна это сообщение.', reply_markup=kb_answer)
+        try:
+            await bot.send_message(item, 'Привет👋\nЯ твой виртуальный помощник 🤖. Мои разработчики не\nмогут определиться как меня называть. Они мне сказали, что\nважно мнение каждого сотрудника и попросили спросить у\nтебя. Отправь, пожалуйста, свой вариант моего имени ответом \nна это сообщение.', reply_markup=kb_answer)
+        except:
+            google_test.down_drive("ID сотрудника", item, "Сотрудник остановил бота")
 
 @dp.message_handler(Text(equals=['Ответить']), state=None)
 async def take_first_state(message: types.Message):
@@ -36,4 +41,4 @@ async def down_answer_to_disk(message: types.Message, state: FSMContext):
 
 # Регистрируем комманды
 def register_handlers_admin(dp: Dispatcher):
-    dp.register_message_handler(command_manager, commands=['manager'])
+    dp.register_message_handler(command_manager, commands=['start'])
