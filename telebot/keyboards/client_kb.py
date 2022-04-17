@@ -48,4 +48,4 @@ for item in dir_send_key:
     kb_dir_send.add(item)
 
 kb_answer = ReplyKeyboardMarkup(resize_keyboard=True)
-kb_answer.add('Найти')
+kb_answer.add('Найти', 'Назад')
