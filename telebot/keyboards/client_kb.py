@@ -47,5 +47,5 @@ kb_dir_send = ReplyKeyboardMarkup(resize_keyboard=True)
 for item in dir_send_key:
     kb_dir_send.add(item)
 
-kb_admin = ReplyKeyboardMarkup(resize_keyboard=True)
-kb_admin.add('Опубликовать новость')
+kb_answer = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_answer.add('Найти')
