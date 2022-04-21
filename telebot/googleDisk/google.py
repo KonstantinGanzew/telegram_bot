@@ -15,11 +15,13 @@ ID_FOLDER = {'Автотрейд': '1w0bXnZDHgYrM5hawUkH5CvmOoAPnedV7',
 
 ID_TEL = []
 
+CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
+
+LIST_EMPLOYES = []
 
 # Получаем ид сотрудников
 def open_driveID():
     if not ID_TEL: 
-        CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
         # ID Google Sheets документа (можно взять из его URL)
         spreadsheet_id = '1TLIT1BHPWw-00tF8PNHdyny1FJp5OAQB2ukXiUmyY-0'
 
@@ -41,42 +43,13 @@ def open_driveID():
         for item in val:
             for i in item:
                 ID_TEL.append(int(i.replace(' ', '')))
-        print('Я тут и я был')
+
     return ID_TEL
 
 
-# Заносим пожудание на диск
+
+# Заносим пожелание на диск
 def down_drive(first_name, username, text):
-    CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
-    # ID Google Sheets документа (можно взять из его URL)
-    spreadsheet_id = '1gqmdEgkMGGo6XHB4l0akIUkQN7ExZJGHh797fGS6l0E'
-
-    # Авторизуемся и получаем service — экземпляр доступа к API
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        CREDENTIALS_FILE,
-        ['https://www.googleapis.com/auth/spreadsheets',
-        'https://www.googleapis.com/auth/drive'])
-    httpAuth = credentials.authorize(httplib2.Http())
-    service = apiclient.discovery.build('sheets', 'v4', http = httpAuth)
-
-    list = [[first_name], [username], [text]]
-
-    resource = {
-        "majorDimension": "COLUMNS",
-        "values": list
-    }
-    range = "Sheet1!A:C"
-    service.spreadsheets().values().append(
-        spreadsheetId=spreadsheet_id,
-        range=range,
-        body=resource,
-        valueInputOption="USER_ENTERED"
-    ).execute()
-
-
-# Заносим пожудание на диск
-def down_drive(first_name, username, text):
-    CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
     # ID Google Sheets документа (можно взять из его URL)
     spreadsheet_id = '1gqmdEgkMGGo6XHB4l0akIUkQN7ExZJGHh797fGS6l0E'
 
@@ -106,7 +79,6 @@ def down_drive(first_name, username, text):
 # Скачиваем файл с диска
 def search_file(name_org, search_file):
     SCOPES = ['https://www.googleapis.com/auth/drive']
-    SERVICE_ACCOUNT_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
     credentials = service_account.Credentials.from_service_account_file(
         SERVICE_ACCOUNT_FILE, scopes=SCOPES)
     service = build('drive', 'v3', credentials=credentials)
@@ -119,28 +91,30 @@ def search_file(name_org, search_file):
 
 # Собираем список сотрудников
 def open_list_employees(name_key):
-    CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
-    # ID Google Sheets документа (можно взять из его URL)
-    spreadsheet_id = '1TLIT1BHPWw-00tF8PNHdyny1FJp5OAQB2ukXiUmyY-0'
+    global LIST_EMPLOYES
+    if not LIST_EMPLOYES:
+        # ID Google Sheets документа (можно взять из его URL)
+        spreadsheet_id = '1TLIT1BHPWw-00tF8PNHdyny1FJp5OAQB2ukXiUmyY-0'
 
-    # Авторизуемся и получаем service — экземпляр доступа к API
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        CREDENTIALS_FILE,
-        ['https://www.googleapis.com/auth/spreadsheets',
-        'https://www.googleapis.com/auth/drive'])
-    httpAuth = credentials.authorize(httplib2.Http())
-    service = apiclient.discovery.build('sheets', 'v4', http = httpAuth)
+        # Авторизуемся и получаем service — экземпляр доступа к API
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(
+            CREDENTIALS_FILE,
+            ['https://www.googleapis.com/auth/spreadsheets',
+            'https://www.googleapis.com/auth/drive'])
+        httpAuth = credentials.authorize(httplib2.Http())
+        service = apiclient.discovery.build('sheets', 'v4', http = httpAuth)
 
-    # Читаем файл и заполняем кортеж идшниками
-    values = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheet_id,
-        range='A1:J137',
-        majorDimension='ROWS'
-    ).execute()
+        # Читаем файл и заполняем кортеж идшниками
+        values = service.spreadsheets().values().get(
+            spreadsheetId=spreadsheet_id,
+            range='A1:K1000',
+            majorDimension='ROWS'
+        ).execute()
 
-    val = values.pop('values')
+        LIST_EMPLOYES = values.pop('values')
+
     values = []
-    for item in val:
+    for item in LIST_EMPLOYES:
         s = ''
         for i in item:
             s  += i.strip().lower() + ' '
