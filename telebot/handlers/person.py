@@ -17,7 +17,7 @@ async def take_first_state(message: types.Message, state: FSMContext):
     staf = google.open_list_employees(message.text)
     await state.finish()    
     for staff in staf:
-        await bot.send_message(message.from_user.id, f'Имя: {staff[0]} {staff[1]} {staff[2]}\nДата рождения: {staff[4]}\nemail: {staff[6]}\nНомер телефона: {staff[7]}\nМесто работы: {staff[8]}\nДолжность: {staff[9]}')
+        await bot.send_message(message.from_user.id, f'Имя: {staff[0]} {staff[1]} {staff[2]}\nДата рождения: {staff[4]}\nemail: {staff[6]}\nНомер телефона: 8{staff[7]}\nМесто работы: {staff[8]}\nДолжность: {staff[9]}')
 
 
 async def command_person(message: types.Message):
