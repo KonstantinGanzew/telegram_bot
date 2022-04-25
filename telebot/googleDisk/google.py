@@ -15,7 +15,7 @@ ID_FOLDER = {'Автотрейд': '1w0bXnZDHgYrM5hawUkH5CvmOoAPnedV7',
 
 ID_TEL = []
 
-CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
+CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
 
 LIST_EMPLOYES = []
 
@@ -80,7 +80,7 @@ def down_drive(first_name, username, text):
 def search_file(name_org, search_file):
     SCOPES = ['https://www.googleapis.com/auth/drive']
     credentials = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+        CREDENTIALS_FILE, scopes=SCOPES)
     service = build('drive', 'v3', credentials=credentials)
     results = service.files().list(
                                     pageSize=20, 
