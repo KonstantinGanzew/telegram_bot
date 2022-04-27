@@ -1,0 +1,11 @@
+@echo off
+
+call %~dp0\telebot\Scripts\activate
+
+cd %~dp0telebot
+
+set TOKEN=870694010:AAG76lKmUBPk6krWmGlcAdC2b1VQaQ3QVPg
+
+python.exe bot_telegram.py
+
+pause

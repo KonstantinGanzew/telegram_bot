@@ -10,17 +10,25 @@ from aiogram.dispatcher import FSMContext
 from handlers import search_state
 
 
-
 @dp.message_handler(state=search_state.var_name)
 async def take_first_state(message: types.Message, state: FSMContext):
-    staf = google.open_list_employees(message.text)
+    staf = google.list_employees()
+    name_key = message.text
     await state.finish()
-    if staf:
-        for staff in staf:
+    it = 0
+    for staff in staf:
+        s = ''
+        for i in staff:
+            s  += i.strip().lower() + ' '
+        if s.find(name_key.lower()) != -1:
             await bot.send_message(message.from_user.id, f'Имя: {staff[1]}\nФамилия: {staff[0]}\nОтчество: {staff[2]}\nДата рождения: {staff[4]}\nНомер телефона: +7{staff[7]}\nЛичный email: {staff[6]}\nЮрлицо где оформлен сотрудник: {staff[8]}\nДолжность: {staff[9]}')
             await bot.send_contact(message.from_user.id, f'+7{staff[7]}', f'{staff[0]} {staff[1]}')
-    else:
+            it += 1
+        s = ''
+    if it == 0:
         await bot.send_message(message.from_user.id, "Контакт не найден")
+    else:
+        it = 0
 
 async def command_person(message: types.Message):
     await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_person)
