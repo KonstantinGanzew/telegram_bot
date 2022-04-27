@@ -8,7 +8,7 @@ from handlers import news, company, direct, docks, EBITDA, person
 from googleDisk import google
 
 
-aut_id = google.open_driveID()
+aut_id = google.id_telegram()
 aut_id.append(225923687)
 
 # Обрабатываем комманды
