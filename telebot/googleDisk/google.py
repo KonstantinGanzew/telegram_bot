@@ -1,9 +1,13 @@
+import time
+import schedule
+import logging
 import httplib2
 import apiclient.discovery
 from oauth2client.service_account import ServiceAccountCredentials
 from google.oauth2 import service_account
 from googleapiclient.http import MediaIoBaseDownload,MediaFileUpload
 from googleapiclient.discovery import build
+
 
 ID_FOLDER = {'Автотрейд': '1w0bXnZDHgYrM5hawUkH5CvmOoAPnedV7',
              'ИП Васильев': '1huMRi6BgY1VU8Ts55KIRbpmQ13ui58LM',
@@ -15,9 +19,9 @@ ID_FOLDER = {'Автотрейд': '1w0bXnZDHgYrM5hawUkH5CvmOoAPnedV7',
 
 ID_TEL = []
 EMPLOYEES = []
+ACTUAL_NEWS = []
 
-
-CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
+CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
 
 # Возвращаем значение идшек
 def id_telegram():
@@ -26,6 +30,10 @@ def id_telegram():
 # Возвращаем список сотруднитков
 def list_employees():
     return EMPLOYEES
+
+# Возвращаем список всех новостей
+def list_news():
+    return ACTUAL_NEWS
 
 # Получаем сотрудников
 def open_driveID():
@@ -50,6 +58,30 @@ def open_driveID():
     for item in val:
         ID_TEL.append(item[5].replace(' ', ''))
         EMPLOYEES.append(item)
+
+def get_news():
+    ACTUAL_NEWS = []
+    # ID Google Sheets документа
+    spreadsheet_id = '1gqmdEgkMGGo6XHB4l0akIUkQN7ExZJGHh797fGS6l0E'
+
+    # Авторизуемся и получаем service — экземпляр доступа к API
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    CREDENTIALS_FILE,
+    ['https://www.googleapis.com/auth/spreadsheets',
+    'https://www.googleapis.com/auth/drive'])
+    httpAuth = credentials.authorize(httplib2.Http())
+    service = apiclient.discovery.build('sheets', 'v4', http = httpAuth)
+
+    # Читаем файл и заполняем кортеж идшниками
+    values = service.spreadsheets().values().get(
+        spreadsheetId=spreadsheet_id,
+        range='A11:G1000',
+        majorDimension='ROWS'
+    ).execute()
+    val = values.pop('values')
+    for item in val:
+        ACTUAL_NEWS.append(item)
+
 
 # Заносим пожелание на диск не использоваемый функционал
 def down_drive(first_name, username, text):
@@ -90,3 +122,15 @@ def search_file(name_org, search_file):
                                     fields="files(id, name, mimeType, parents, createdTime)",
                                     q=f"'{ID_FOLDER.get(name_org)}' in parents and fullText contains '{search_file}'").execute()
     print(results.pop('files')[0].pop('id'))
+
+# Запускаем шедуле
+if __name__ == '__main__':
+    schedule.every(10).seconds.do(get_news)
+    schedule.every().hours.do(open_driveID)
+    while True:
+        try:
+            schedule.run_pending()
+        except Exception as e:
+            logging.exception("Не удалось получить данные с гугла")
+            pass
+        time.sleep(1)

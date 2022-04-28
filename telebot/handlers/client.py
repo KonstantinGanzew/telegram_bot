@@ -13,8 +13,11 @@ aut_id.append(225923687)
 
 # Обрабатываем комманды
 async def command_start(message: types.Message):
-    await bot.send_message(message.from_user.id, 'test', reply_markup=kb_client)
-
+    try:
+        await bot.send_message(message.from_user.id, 'test', reply_markup=kb_client)
+        print(message)
+    except:
+        await message.answer("Пшел ты! педик")
 #    if autentication(message):
 #        await send_dir(message)
 #        for item in aut_id:
