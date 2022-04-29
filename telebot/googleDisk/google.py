@@ -1,6 +1,7 @@
 import time
-import schedule
 import logging
+import asyncio
+from webbrowser import get
 import httplib2
 import apiclient.discovery
 from oauth2client.service_account import ServiceAccountCredentials
@@ -21,22 +22,24 @@ ID_TEL = []
 EMPLOYEES = []
 ACTUAL_NEWS = []
 
-CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
+CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
 
 # Возвращаем значение идшек
-def id_telegram():
+async def id_telegram():
+    global ID_TEL
     return ID_TEL
 
 # Возвращаем список сотруднитков
-def list_employees():
+async def list_employees():
+    global EMPLOYEES
     return EMPLOYEES
 
 # Возвращаем список всех новостей
-def list_news():
+async def list_news():
     return ACTUAL_NEWS
 
 # Получаем сотрудников
-def open_driveID():
+async def open_driveID():
     # ID Google Sheets документа (можно взять из его URL)
     spreadsheet_id = '1TLIT1BHPWw-00tF8PNHdyny1FJp5OAQB2ukXiUmyY-0'
 
@@ -59,7 +62,8 @@ def open_driveID():
         ID_TEL.append(item[5].replace(' ', ''))
         EMPLOYEES.append(item)
 
-def get_news():
+async def get_news():
+    global ACTUAL_NEWS
     ACTUAL_NEWS = []
     # ID Google Sheets документа
     spreadsheet_id = '1gqmdEgkMGGo6XHB4l0akIUkQN7ExZJGHh797fGS6l0E'
@@ -75,7 +79,7 @@ def get_news():
     # Читаем файл и заполняем кортеж идшниками
     values = service.spreadsheets().values().get(
         spreadsheetId=spreadsheet_id,
-        range='A11:G1000',
+        range='A12:G1000',
         majorDimension='ROWS'
     ).execute()
     val = values.pop('values')
@@ -122,15 +126,3 @@ def search_file(name_org, search_file):
                                     fields="files(id, name, mimeType, parents, createdTime)",
                                     q=f"'{ID_FOLDER.get(name_org)}' in parents and fullText contains '{search_file}'").execute()
     print(results.pop('files')[0].pop('id'))
-
-# Запускаем шедуле
-if __name__ == '__main__':
-    schedule.every(10).seconds.do(get_news)
-    schedule.every().hours.do(open_driveID)
-    while True:
-        try:
-            schedule.run_pending()
-        except Exception as e:
-            logging.exception("Не удалось получить данные с гугла")
-            pass
-        time.sleep(1)

@@ -9,7 +9,6 @@ from googleDisk import google
 
 
 aut_id = google.id_telegram()
-aut_id.append(225923687)
 
 # Обрабатываем комманды
 async def command_start(message: types.Message):

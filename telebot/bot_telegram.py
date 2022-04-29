@@ -1,11 +1,13 @@
 from aiogram.utils import executor
 from create_bot import dp
 from googleDisk import google
+from handlers import news
 
 async def on_startup(_):
     print('Бот запущен')
-    google.open_driveID()
-    google.get_news()
+    await google.open_driveID()
+    await google.get_news()
+    await news.scheduler()
 
 
 
