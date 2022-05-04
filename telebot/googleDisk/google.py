@@ -1,12 +1,14 @@
-import time
+from re import L
+import os
 import logging
 import asyncio
+import io
 from webbrowser import get
 import httplib2
 import apiclient.discovery
 from oauth2client.service_account import ServiceAccountCredentials
 from google.oauth2 import service_account
-from googleapiclient.http import MediaIoBaseDownload,MediaFileUpload
+from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
 from googleapiclient.discovery import build
 
 
@@ -22,21 +24,7 @@ ID_TEL = []
 EMPLOYEES = []
 ACTUAL_NEWS = []
 
-CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
-
-# Возвращаем значение идшек
-async def id_telegram():
-    global ID_TEL
-    return ID_TEL
-
-# Возвращаем список сотруднитков
-async def list_employees():
-    global EMPLOYEES
-    return EMPLOYEES
-
-# Возвращаем список всех новостей
-async def list_news():
-    return ACTUAL_NEWS
+CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
 
 # Получаем сотрудников
 async def open_driveID():
@@ -66,7 +54,7 @@ async def get_news():
     global ACTUAL_NEWS
     ACTUAL_NEWS = []
     # ID Google Sheets документа
-    spreadsheet_id = '1gqmdEgkMGGo6XHB4l0akIUkQN7ExZJGHh797fGS6l0E'
+    spreadsheet_id = '1IHR2-KftLdq1swsr0G3Nqb9VpWGypdlrF7AgG1jd3bc'
 
     # Авторизуемся и получаем service — экземпляр доступа к API
     credentials = ServiceAccountCredentials.from_json_keyfile_name(
@@ -79,7 +67,7 @@ async def get_news():
     # Читаем файл и заполняем кортеж идшниками
     values = service.spreadsheets().values().get(
         spreadsheetId=spreadsheet_id,
-        range='A12:G1000',
+        range='A3:G1000',
         majorDimension='ROWS'
     ).execute()
     val = values.pop('values')
@@ -125,4 +113,32 @@ def search_file(name_org, search_file):
                                     pageSize=20, 
                                     fields="files(id, name, mimeType, parents, createdTime)",
                                     q=f"'{ID_FOLDER.get(name_org)}' in parents and fullText contains '{search_file}'").execute()
-    print(results.pop('files')[0].pop('id'))
+    print(results.pop('files')[0].pop('name'))
+
+
+def saveFile(parend_id, file_id):
+    SCOPES = ['https://www.googleapis.com/auth/drive']
+    credentials = service_account.Credentials.from_service_account_file(
+        CREDENTIALS_FILE, scopes=SCOPES)
+    service = build('drive', 'v3', credentials=credentials)
+    results = service.files().list(
+        pageSize=1000, 
+        fields="files(id, name, mimeType, parents, createdTime)",
+        q=f"'{parend_id}' in parents").execute()
+    file_name = ''
+    for i in results['files']:
+        if i['id'] == file_id:
+            file_name = (i['name'])
+            break
+    request = service.files().get_media(fileId=file_id)
+    fh = io.BytesIO()
+    downloader = MediaIoBaseDownload(fd=fh, request=request)
+    done = False
+    while not done:
+        status, done = downloader.next_chunk()
+        fh.seek(0)
+
+        with open(os.path.join(file_name), 'wb') as f:
+            f.write(fh.read())
+            f.close()
+    return file_name

@@ -8,7 +8,7 @@ from handlers import news, company, direct, docks, EBITDA, person
 from googleDisk import google
 
 
-aut_id = google.id_telegram()
+#aut_id = google.id_telegram()
 
 # Обрабатываем комманды
 async def command_start(message: types.Message):
