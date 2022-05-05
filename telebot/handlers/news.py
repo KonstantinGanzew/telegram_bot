@@ -4,6 +4,7 @@ import logging
 import asyncio
 from googleDisk import google
 from aiogram import types, Dispatcher
+from aiogram.dispatcher.filters import Text
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from create_bot import dp, bot
 from keyboards import kb_news
@@ -17,7 +18,7 @@ async def command_news(message: types.Message):
     await message.delete()
 
 #29.04.2022 9:00:00
-# Отправим актуальные новости в группу -618154662
+# Отправим актуальные новости в группу -618154662 -1001469485742 225923687
 async def asck_news():
     global ACTUAL_NEWS
     d1 = int(datetime.datetime.now().strftime("%Y%m%d"))
@@ -35,12 +36,40 @@ async def asck_news():
                 continue
             else:
                 name_doc = google.saveFile('1GilYTUv3Bupck8vuIxLDJdaPfL2H23W0RZPtGXv_oXxRKQcHiH0P3gbupeL8l1O-Sak2KjGV', i[4].split('=')[-1])
-                await bot.send_file(225923687, open(name_doc, 'rb'))
+                doc = open(name_doc, 'rb')
+                if name_doc.split('.')[-1] == 'jpg':
+                    await bot.send_photo(225923687, doc, i[3])
+                else:
+                    await bot.send_message(225923687, i[3])
+                    await bot.send_document(225923687, open(name_doc, 'rb'))
                 ACTUAL_NEWS.append(i)
+
+
+@dp.message_handler(Text(equals='Обращение к директору'))
+async def display_of_current_news(message: types.Message):
+    global ACTUAL_NEWS
+    d1 = int(datetime.datetime.now().strftime("%Y%m%d"))
+    for i in ACTUAL_NEWS:
+        date = i[6].split()
+        date1 = date[0].split('.')
+#        date2 = date[1].split(':')
+        d2 = int(date1[2] + date1[1] + date1[0])
+        if d1 > d2:
+            ACTUAL_NEWS.remove(i)
+        else:
+            name_doc = google.saveFile('1GilYTUv3Bupck8vuIxLDJdaPfL2H23W0RZPtGXv_oXxRKQcHiH0P3gbupeL8l1O-Sak2KjGV', i[4].split('=')[-1])
+            doc = open(name_doc, 'rb')
+            if name_doc.split('.')[-1] == 'jpg':
+                await bot.send_photo(225923687, doc, i[3])
+            else:
+                await bot.send_message(225923687, i[3])
+                await bot.send_document(225923687, open(name_doc, 'rb'))
+
 
 
 
 async def scheduler():
+    #aioschedule.every().seconds.at(f"{message.text}")
     aioschedule.every(3).seconds.do(asck_news)
     aioschedule.every(10).seconds.do(google.get_news)
     aioschedule.every().hours.do(google.open_driveID)
