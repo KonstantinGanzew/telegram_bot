@@ -22,20 +22,25 @@ async def command_news(message: types.Message):
 async def asck_news():
     global ACTUAL_NEWS
     d1 = int(datetime.datetime.now().strftime("%Y%m%d"))
+    d11 = int(datetime.datetime.now().strftime("%H%M%S"))
     for i in google.ACTUAL_NEWS:
+        if len(i) == 0:
+            continue
         date = i[5].split()
         date1 = date[0].split('.')
         date2 = date[1].split(':')
         d2 = int(date1[2] + date1[1] + date1[0])
+        d21 = int(date2[0] + date2[1] + date2[2])
         date = i[6].split()
         date1 = date[0].split('.')
         date2 = date[1].split(':')
         d3 = int(date1[2] + date1[1] + date1[0])
+        d31 = int(date2[0] + date2[1] + date2[2])
         if d1 >= d2 and d3 >= d1:
             if i in ACTUAL_NEWS:
                 continue
-            else:
-                name_doc = google.saveFile('1GilYTUv3Bupck8vuIxLDJdaPfL2H23W0RZPtGXv_oXxRKQcHiH0P3gbupeL8l1O-Sak2KjGV', i[4].split('=')[-1])
+            elif d11 >= d21 and d31 >= d11:
+                name_doc = google.save_file('1GilYTUv3Bupck8vuIxLDJdaPfL2H23W0RZPtGXv_oXxRKQcHiH0P3gbupeL8l1O-Sak2KjGV', i[4].split('=')[-1])
                 doc = open(name_doc, 'rb')
                 if name_doc.split('.')[-1] == 'jpg':
                     await bot.send_photo(225923687, doc, i[3])
@@ -43,27 +48,43 @@ async def asck_news():
                     await bot.send_message(225923687, i[3])
                     await bot.send_document(225923687, open(name_doc, 'rb'))
                 ACTUAL_NEWS.append(i)
+                print('Новость опубликована')
+        else:
+            if len(ACTUAL_NEWS) != 0:
+                ACTUAL_NEWS.remove(i)
 
 
-@dp.message_handler(Text(equals='Обращение к директору'))
+@dp.message_handler(Text(equals='Вывод актуальных новостей'))
 async def display_of_current_news(message: types.Message):
     global ACTUAL_NEWS
     d1 = int(datetime.datetime.now().strftime("%Y%m%d"))
-    for i in ACTUAL_NEWS:
-        date = i[6].split()
-        date1 = date[0].split('.')
-#        date2 = date[1].split(':')
-        d2 = int(date1[2] + date1[1] + date1[0])
-        if d1 > d2:
-            ACTUAL_NEWS.remove(i)
-        else:
-            name_doc = google.saveFile('1GilYTUv3Bupck8vuIxLDJdaPfL2H23W0RZPtGXv_oXxRKQcHiH0P3gbupeL8l1O-Sak2KjGV', i[4].split('=')[-1])
-            doc = open(name_doc, 'rb')
-            if name_doc.split('.')[-1] == 'jpg':
-                await bot.send_photo(225923687, doc, i[3])
+    d11 = int(datetime.datetime.now().strftime("%H%M%S"))
+    if len(ACTUAL_NEWS) != 0:
+        for i in ACTUAL_NEWS:
+            date = i[5].split()
+            date1 = date[0].split('.')
+            date2 = date[1].split(':')
+            d2 = int(date1[2] + date1[1] + date1[0])
+            d21 = int(date2[0] + date2[1] + date2[2])
+            date = i[6].split()
+            date1 = date[0].split('.')
+            date2 = date[1].split(':')
+            d3 = int(date1[2] + date1[1] + date1[0])
+            d31 = int(date2[0] + date2[1] + date2[2])
+            if d1 > d2:
+                ACTUAL_NEWS.remove(i)
+            elif d11 >= d21 and d31 >= d11:
+                name_doc = google.save_file('1GilYTUv3Bupck8vuIxLDJdaPfL2H23W0RZPtGXv_oXxRKQcHiH0P3gbupeL8l1O-Sak2KjGV', i[4].split('=')[-1])
+                doc = open(name_doc, 'rb')
+                if name_doc.split('.')[-1] == 'jpg':
+                    await bot.send_photo(message.from_user.id, doc, i[3])
+                else:
+                    await bot.send_message(message.from_user.id, i[3])
+                    await bot.send_document(message.from_user.id, open(name_doc, 'rb'))
             else:
-                await bot.send_message(225923687, i[3])
-                await bot.send_document(225923687, open(name_doc, 'rb'))
+                ACTUAL_NEWS.remove(i)
+    else:
+        await bot.send_message(message.from_user.id, "Нет актуальных новостей")
 
 
 

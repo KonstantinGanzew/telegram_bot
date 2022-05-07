@@ -1,4 +1,3 @@
-from re import L
 import os
 import logging
 import asyncio
@@ -11,14 +10,14 @@ from google.oauth2 import service_account
 from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
 from googleapiclient.discovery import build
 
-
-ID_FOLDER = {'Автотрейд': '1w0bXnZDHgYrM5hawUkH5CvmOoAPnedV7',
-             'ИП Васильев': '1huMRi6BgY1VU8Ts55KIRbpmQ13ui58LM',
-             'ИП Терехов': '1Y-bj95Ch1K-dDjkDOtOK2uhD0Nf2QqjC',
-             'Сервис Плюс':'1vlM7nS5zVEtfmF8hpVXiULgDn3OtsIH_',
-             'СК Моторс': '1Upch3gks8dCc5ZZKQ9dsPEO1a-6_1iNc',
-             'ТАСКО-МОТОРС': '11QKQA4u6ZWVKuAX0GOlFEGifgDTxsM-P',
-             'ТАСКО-трейд': '1Un7zNPRHmxP1rP949MT_bKTOxZvUgNnD'}
+#  название организации     Образцы заявлений                    положения                            приказы
+ID_FOLDER = {'Автотрейд': ['1w0bXnZDHgYrM5hawUkH5CvmOoAPnedV7', '19zigzNaeTNWKe1BmL8oTJi7aReDhifNr', '1kdrDGDtbxLU0g38hbjWIWwbpZRbdwYzk'], 
+             'ИП Васильев': ['1huMRi6BgY1VU8Ts55KIRbpmQ13ui58LM', '', '1bd2LgRH0l3eh9kNYSBCBYenbUDLQMiN_'], # Нету в положении
+             'ИП Терехов': ['1Y-bj95Ch1K-dDjkDOtOK2uhD0Nf2QqjC', '1rTd_NMU1uK9cvBZ9cGBik6vuLwVhpR0k', '1y11HuGaDHUGKFPCfXz5ewdqzt3UhCSCg'],
+             'Сервис Плюс': ['1vlM7nS5zVEtfmF8hpVXiULgDn3OtsIH_', '', '1lyDUNCsxKlMtu0xmla-7yum5uzJvQDlJ'], # Нету в положении
+             'СК Моторс': ['1Upch3gks8dCc5ZZKQ9dsPEO1a-6_1iNc', '1wJFoKmu1AvNAtCQxV5SCLXAiiHopWYX3', '1P8xmwwfXYtyl-5GFqVjh42ASNnDJTk5i'],
+             'ТАСКО-МОТОРС': ['11QKQA4u6ZWVKuAX0GOlFEGifgDTxsM-P' '1sMQ2tm599P1ecFwN736G0Xa3wNPArH2S', '18uTcupE90lY-Ni3WnJXMikG7B1e9unLu'],
+             'ТАСКО-трейд': ['1Un7zNPRHmxP1rP949MT_bKTOxZvUgNnD', '1dyG19CFPXGyGqYiZdC1UfN6adKR399sj', '17TxJZ6SudqijH32ktnmnDvPHXFd6uG2k']}
 
 ID_TEL = []
 EMPLOYEES = []
@@ -103,20 +102,7 @@ def down_drive(first_name, username, text):
     ).execute()
 
 
-# Скачиваем файл с диска
-def search_file(name_org, search_file):
-    SCOPES = ['https://www.googleapis.com/auth/drive']
-    credentials = service_account.Credentials.from_service_account_file(
-        CREDENTIALS_FILE, scopes=SCOPES)
-    service = build('drive', 'v3', credentials=credentials)
-    results = service.files().list(
-                                    pageSize=20, 
-                                    fields="files(id, name, mimeType, parents, createdTime)",
-                                    q=f"'{ID_FOLDER.get(name_org)}' in parents and fullText contains '{search_file}'").execute()
-    print(results.pop('files')[0].pop('name'))
-
-
-def saveFile(parend_id, file_id):
+def save_file(parend_id, file_id):
     SCOPES = ['https://www.googleapis.com/auth/drive']
     credentials = service_account.Credentials.from_service_account_file(
         CREDENTIALS_FILE, scopes=SCOPES)
@@ -128,7 +114,7 @@ def saveFile(parend_id, file_id):
     file_name = ''
     for i in results['files']:
         if i['id'] == file_id:
-            file_name = (i['name'])
+            file_name = i['name'].lower()
             break
     request = service.files().get_media(fileId=file_id)
     fh = io.BytesIO()
@@ -142,3 +128,19 @@ def saveFile(parend_id, file_id):
             f.write(fh.read())
             f.close()
     return file_name
+
+# Скачиваем файл с диска
+def search_file(name_org, number_folder):
+    SCOPES = ['https://www.googleapis.com/auth/drive']
+    credentials = service_account.Credentials.from_service_account_file(
+        CREDENTIALS_FILE, scopes=SCOPES)
+    service = build('drive', 'v3', credentials=credentials)
+    results = service.files().list(
+                                    pageSize=20, 
+                                    fields="files(id, name, mimeType, parents, createdTime)",
+                                    q=f"'{ID_FOLDER.get(name_org)[number_folder]}' in parents").execute()
+    name_file = []
+    for i in results.pop('files'):
+        name_file.append(save_file(ID_FOLDER.get(name_org)[number_folder], i.pop('id')))
+    return name_file
+

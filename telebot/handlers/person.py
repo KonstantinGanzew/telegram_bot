@@ -12,7 +12,7 @@ from handlers import search_state
 
 @dp.message_handler(state=search_state.var_name)
 async def take_first_state(message: types.Message, state: FSMContext):
-    staf = google.list_employees()
+    staf = google.EMPLOYEES
     name_key = message.text
     await state.finish()
     it = 0
