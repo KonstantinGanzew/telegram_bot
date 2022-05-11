@@ -27,6 +27,10 @@ CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
 
 # Получаем сотрудников
 async def open_driveID():
+    global ID_TEL
+    global EMPLOYEES
+    ID_TEL = []
+    EMPLOYEES = []
     # ID Google Sheets документа (можно взять из его URL)
     spreadsheet_id = '1TLIT1BHPWw-00tF8PNHdyny1FJp5OAQB2ukXiUmyY-0'
 
@@ -121,7 +125,7 @@ def save_file(parend_id, file_id):
     downloader = MediaIoBaseDownload(fd=fh, request=request)
     done = False
     while not done:
-        status, done = downloader.next_chunk()
+        done = downloader.next_chunk()
         fh.seek(0)
 
         with open(os.path.join(file_name), 'wb') as f:
@@ -135,12 +139,14 @@ def search_file(name_org, number_folder):
     credentials = service_account.Credentials.from_service_account_file(
         CREDENTIALS_FILE, scopes=SCOPES)
     service = build('drive', 'v3', credentials=credentials)
+    id_fl = ID_FOLDER.get(name_org)[number_folder]
     results = service.files().list(
                                     pageSize=20, 
                                     fields="files(id, name, mimeType, parents, createdTime)",
-                                    q=f"'{ID_FOLDER.get(name_org)[number_folder]}' in parents").execute()
+                                    q=f"'{id_fl}' in parents").execute()
     name_file = []
     for i in results.pop('files'):
-        name_file.append(save_file(ID_FOLDER.get(name_org)[number_folder], i.pop('id')))
+        id = i.pop('id')
+        name_file.append(save_file(id_fl, id))
     return name_file
 

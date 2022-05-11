@@ -1,3 +1,4 @@
+import asyncio
 from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Text
 from create_bot import dp, bot
@@ -20,10 +21,12 @@ async def take_first_state(message: types.Message, state: FSMContext):
         s = ''
         for i in staff:
             s  += i.strip().lower() + ' '
-        if s.find(name_key.lower()) != -1:
-            await bot.send_message(message.from_user.id, f'Имя: {staff[1]}\nФамилия: {staff[0]}\nОтчество: {staff[2]}\nДата рождения: {staff[4]}\nНомер телефона: +7{staff[7]}\nЛичный email: {staff[6]}\nЮрлицо где оформлен сотрудник: {staff[8]}\nДолжность: {staff[9]}')
-            await bot.send_contact(message.from_user.id, f'+7{staff[7]}', f'{staff[0]} {staff[1]}')
-            it += 1
+            if s.find(name_key.lower()) != -1:
+                await bot.send_message(message.from_user.id, f'Имя: {staff[1]}\nФамилия: {staff[0]}\nОтчество: {staff[2]}\nДата рождения: {staff[4]}\nНомер телефона: +7{staff[7]}\nЛичный email: {staff[6]}\nЮрлицо где оформлен сотрудник: {staff[8]}\nДолжность: {staff[9]}')
+                await asyncio.sleep(1)
+                await bot.send_contact(message.from_user.id, f'+7{staff[7]}', f'{staff[0]} {staff[1]}')
+                await asyncio.sleep(1)
+                it += 1
         s = ''
     if it == 0:
         await bot.send_message(message.from_user.id, "Контакт не найден")
@@ -46,3 +49,4 @@ async def vac(message: types.Message):
     vacancy = parse(True)
     for item in vacancy:
         await bot.send_message(message.from_user.id, item)
+        await asyncio.sleep(1)

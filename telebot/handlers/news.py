@@ -39,19 +39,18 @@ async def asck_news():
         if d1 >= d2 and d3 >= d1:
             if i in ACTUAL_NEWS:
                 continue
-            elif d11 >= d21 and d31 >= d11:
+            elif d11 >= d21:
                 name_doc = google.save_file('1GilYTUv3Bupck8vuIxLDJdaPfL2H23W0RZPtGXv_oXxRKQcHiH0P3gbupeL8l1O-Sak2KjGV', i[4].split('=')[-1])
                 doc = open(name_doc, 'rb')
                 if name_doc.split('.')[-1] == 'jpg':
-                    await bot.send_photo(225923687, doc, i[3])
+                    await bot.send_photo(-1001469485742, doc, i[3])
+                    ACTUAL_NEWS.append(i)
                 else:
-                    await bot.send_message(225923687, i[3])
-                    await bot.send_document(225923687, open(name_doc, 'rb'))
-                ACTUAL_NEWS.append(i)
+                    await bot.send_message(-1001469485742, i[3])
+                    await bot.send_document(-1001469485742, open(name_doc, 'rb'))
+                    ACTUAL_NEWS.append(i)
                 print('Новость опубликована')
-        else:
-            if len(ACTUAL_NEWS) != 0:
-                ACTUAL_NEWS.remove(i)
+        
 
 
 @dp.message_handler(Text(equals='Вывод актуальных новостей'))
@@ -92,7 +91,7 @@ async def display_of_current_news(message: types.Message):
 async def scheduler():
     #aioschedule.every().seconds.at(f"{message.text}")
     aioschedule.every(3).seconds.do(asck_news)
-    aioschedule.every(10).seconds.do(google.get_news)
+    aioschedule.every(3).seconds.do(google.get_news)
     aioschedule.every().hours.do(google.open_driveID)
     while True:
         await aioschedule.run_pending()
