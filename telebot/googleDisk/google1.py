@@ -19,8 +19,6 @@ ID_FOLDER = {'Автотрейд': ['1w0bXnZDHgYrM5hawUkH5CvmOoAPnedV7', '19zigz
              'ТАСКО-МОТОРС': ['11QKQA4u6ZWVKuAX0GOlFEGifgDTxsM-P' '1sMQ2tm599P1ecFwN736G0Xa3wNPArH2S', '18uTcupE90lY-Ni3WnJXMikG7B1e9unLu'],
              'ТАСКО-трейд': ['1Un7zNPRHmxP1rP949MT_bKTOxZvUgNnD', '1dyG19CFPXGyGqYiZdC1UfN6adKR399sj', '17TxJZ6SudqijH32ktnmnDvPHXFd6uG2k']}
 
-ID_DOCKS = dict()
-
 ID_TEL = []
 EMPLOYEES = []
 ACTUAL_NEWS = []
@@ -80,32 +78,6 @@ async def get_news():
     for item in val:
         ACTUAL_NEWS.append(item)
 
-def id_docks():
-    global ID_DOCKS
-    # ID Google Sheets документа (можно взять из его URL)
-    spreadsheet_id = '1xnd2KtknGSb8s7oc7dYvaMpad_liFR54x5MhwgT3DYU'
-
-    # Авторизуемся и получаем service — экземпляр доступа к API
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-    CREDENTIALS_FILE,
-    ['https://www.googleapis.com/auth/spreadsheets',
-    'https://www.googleapis.com/auth/drive'])
-    httpAuth = credentials.authorize(httplib2.Http())
-    service = apiclient.discovery.build('sheets', 'v4', http = httpAuth)
-
-    # Читаем файл и заполняем кортеж идшниками
-    values = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheet_id,
-        range='E2:G1000',
-        majorDimension='ROWS'
-    ).execute()
-    val = values.pop('values')
-    for item in val:
-        try:
-            ID_DOCKS[item[2]][item[1]] = item[0].split('=')[-1]
-        except:
-            ID_DOCKS.update({item[2]: {item[1]: item[0].split('=')[-1]}})
-    return ID_DOCKS
 
 # Заносим пожелание на диск не использоваемый функционал
 def down_drive(first_name, username, text):
@@ -135,7 +107,7 @@ def down_drive(first_name, username, text):
     ).execute()
 
 
-def save_file(file_id):
+def save_file(parend_id, file_id):
     SCOPES = ['https://www.googleapis.com/auth/drive']
     credentials = service_account.Credentials.from_service_account_file(
         CREDENTIALS_FILE, scopes=SCOPES)
@@ -143,7 +115,7 @@ def save_file(file_id):
     results = service.files().list(
         pageSize=1000, 
         fields="files(id, name, mimeType, parents, createdTime)",
-        ).execute()
+        q=f"'{parend_id}' in parents").execute()
     file_name = ''
     for i in results['files']:
         if i['id'] == file_id:
@@ -163,20 +135,16 @@ def save_file(file_id):
     return file_name
 
 # Скачиваем файл с диска
-def search_file(name_org, name_fil):
+def search_file(name_org, number_folder):
     SCOPES = ['https://www.googleapis.com/auth/drive']
     credentials = service_account.Credentials.from_service_account_file(
         CREDENTIALS_FILE, scopes=SCOPES)
     service = build('drive', 'v3', credentials=credentials)
-    id_fl = ID_FOLDER.get(name_org)[name_fil]
+    id_fl = ID_FOLDER.get(name_org)[number_folder]
     results = service.files().list(pageSize=20, fields="files(id, name, mimeType, parents, createdTime)", q=f"'{id_fl}' in parents").execute()
     name_file = []
     for i in results.pop('files'):
         id = i.pop('id') 
-        name_file.append(save_file(id))
+        name_file.append(save_file(id_fl, id))
     return name_file
-
-# Скачиваем файл с диска
-def search_filename(name_org, name_fil):
-    return save_file(ID_DOCKS[name_org][name_fil])
 

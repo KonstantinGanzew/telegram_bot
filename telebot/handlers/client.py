@@ -3,7 +3,7 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Command, Text
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from create_bot import dp, bot
-from keyboards import kb_client, kb_direct
+from keyboards import kb_client, kb_direct, kb_docks
 from handlers import news, company, direct, docks, EBITDA, person
 from googleDisk import google
 
@@ -82,6 +82,11 @@ async def point_company(message: types.Message):
 @dp.message_handler(Text(equals=['Haзад']))
 async def point_company(message: types.Message):
     await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_direct)
+
+# Выходи из пункта образцы заявлений
+@dp.message_handler(Text(equals=['Hазaд']))
+async def point_company(message: types.Message):
+    await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_docks)
 
 
 

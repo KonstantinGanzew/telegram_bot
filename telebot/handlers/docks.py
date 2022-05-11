@@ -4,7 +4,7 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Text
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from create_bot import dp, bot
-from keyboards import kb_docks
+from keyboards import kb_docks, kb_sample
 from googleDisk import google
 
 async def command_docks(message: types.Message):
@@ -14,21 +14,14 @@ async def command_docks(message: types.Message):
 
 @dp.message_handler(Text(equals='Образцы заявлений'))
 async def sample_applications(message: types.Message):
-    staff = google.EMPLOYEES
-    name_org = ''
-    for st in staff:
-        for s in st:
-            try:
-                if int(s) == message.from_user.id:
-                    name_org = st[8]
-                    break
-            except:
-                continue
-    name_file = google.search_file(name_org, 0)
-    for name in name_file:
-        await bot.send_document(message.from_user.id, open(name, 'rb'))
-        await asyncio.sleep(1)
+    await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_sample)
+    await message.delete()
 
+
+@dp.message_handler(Text(equals='выход из отпуска, уход за ребёнком'))
+async def sample_applications(message: types.Message):
+    await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_sample)
+    await message.delete()
 
 @dp.message_handler(Text(equals='Приказы'))
 async def sample_applications(message: types.Message):
@@ -65,7 +58,7 @@ async def sample_applications(message: types.Message):
                     break
             except:
                 continue
-    name_file = google.search_file(name_org, 1)
+    name_file = google.save_file(name_org, 1)
     for name in name_file:
         await bot.send_document(message.from_user.id, open(name, 'rb'))
         await asyncio.sleep(1)

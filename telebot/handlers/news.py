@@ -40,7 +40,7 @@ async def asck_news():
             if i in ACTUAL_NEWS:
                 continue
             elif d11 >= d21:
-                name_doc = google.save_file('1GilYTUv3Bupck8vuIxLDJdaPfL2H23W0RZPtGXv_oXxRKQcHiH0P3gbupeL8l1O-Sak2KjGV', i[4].split('=')[-1])
+                name_doc = google.save_file(i[4].split('=')[-1])
                 doc = open(name_doc, 'rb')
                 if name_doc.split('.')[-1] == 'jpg':
                     await bot.send_photo(-1001469485742, doc, i[3])
@@ -73,7 +73,7 @@ async def display_of_current_news(message: types.Message):
             if d1 > d2:
                 ACTUAL_NEWS.remove(i)
             elif d11 >= d21 and d31 >= d11:
-                name_doc = google.save_file('1GilYTUv3Bupck8vuIxLDJdaPfL2H23W0RZPtGXv_oXxRKQcHiH0P3gbupeL8l1O-Sak2KjGV', i[4].split('=')[-1])
+                name_doc = google.save_file(i[4].split('=')[-1])
                 doc = open(name_doc, 'rb')
                 if name_doc.split('.')[-1] == 'jpg':
                     await bot.send_photo(message.from_user.id, doc, i[3])
