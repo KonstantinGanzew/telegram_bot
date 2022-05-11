@@ -23,7 +23,7 @@ ID_TEL = []
 EMPLOYEES = []
 ACTUAL_NEWS = []
 
-CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
+CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
 
 # Получаем сотрудников
 async def open_driveID():
@@ -140,13 +140,10 @@ def search_file(name_org, number_folder):
         CREDENTIALS_FILE, scopes=SCOPES)
     service = build('drive', 'v3', credentials=credentials)
     id_fl = ID_FOLDER.get(name_org)[number_folder]
-    results = service.files().list(
-                                    pageSize=20, 
-                                    fields="files(id, name, mimeType, parents, createdTime)",
-                                    q=f"'{id_fl}' in parents").execute()
+    results = service.files().list(pageSize=20, fields="files(id, name, mimeType, parents, createdTime)", q=f"'{id_fl}' in parents").execute()
     name_file = []
     for i in results.pop('files'):
-        id = i.pop('id')
+        id = i.pop('id') 
         name_file.append(save_file(id_fl, id))
     return name_file
 
