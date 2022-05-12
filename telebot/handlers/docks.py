@@ -139,12 +139,16 @@ async def sample_applications(message: types.Message):
 
 @dp.message_handler(Text(equals='Карты партнера'))
 async def sample_applications(message: types.Message):
-    pass
+    name_file = google.search_filename(search_company(message.from_user.id), 'Карта партнера')
+    await bot.send_document(message.from_user.id, open(name_file, 'rb'))
+    await message.delete()
 
 
 @dp.message_handler(Text(equals='Фирменные бланки'))
 async def sample_applications(message: types.Message):
-    pass
+    name_file = google.search_filename(search_company(message.from_user.id), 'Фирменный бланк')
+    await bot.send_document(message.from_user.id, open(name_file, 'rb'))
+    await message.delete()
 
 
 @dp.message_handler(Text(equals='Листы мотивации'))
