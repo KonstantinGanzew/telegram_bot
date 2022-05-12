@@ -27,7 +27,7 @@ async def take_first_state(message: types.Message, state: FSMContext):
                 if staff[7] != '':
                     await bot.send_contact(message.from_user.id, f'+7{staff[7]}', f'{staff[0]} {staff[1]}')
                 else:
-                    await bot.send_message(message.from_user.id, 'Нет Контакта')
+                    await bot.send_message(message.from_user.id, 'Нет контакта')
                 await asyncio.sleep(1)
                 it += 1
                 break

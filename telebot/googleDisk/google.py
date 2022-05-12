@@ -57,7 +57,8 @@ async def open_driveID():
         EMPLOYEES.append(item)
         if item[5] != '':
             ID_TEL.append(int(item[5].replace(' ', '')))
-        EMPLOYEES.append(item)
+
+
 async def get_news():
     global ACTUAL_NEWS
     ACTUAL_NEWS = []
