@@ -91,6 +91,7 @@ async def display_of_current_news(message: types.Message):
 async def scheduler():
     #aioschedule.every().seconds.at(f"{message.text}")
     aioschedule.every(3).seconds.do(asck_news)
+    aioschedule.every(3).seconds.do(google.id_docks)
     aioschedule.every(3).seconds.do(google.get_news)
     aioschedule.every().hours.do(google.open_driveID)
     while True:

@@ -8,32 +8,26 @@ from handlers import news, company, direct, docks, EBITDA, person
 from googleDisk import google
 
 
-aut_id = google.ID_TEL
+aut_id = []
 
 # Обрабатываем комманды
 async def command_start(message: types.Message):
+    global aut_id
+    aut_id = google.ID_TEL
     try:
         if message.chat.id != -1001469485742:
-            await send_dir(message)
+            if autentication(message.from_user.id):
+                await send_dir(message)
+            else:
+                await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @lisenokstr Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}')
     except:
-        print("Не работаю")
-#    if autentication(message):
-#        await send_dir(message)
-#        for item in aut_id:
-#            await bot.send_message(item, 'Привет👋\nЯ твой виртуальный помощник 🤖. Мои разработчики не могут определиться как меня называть. Они мне сказали, что важно мнение каждого сотрудника и попросили спросить у тебя. Отправь, пожалуйста, свой вариант моего имени ответом на это сообщение.')
-#
-#    else:
-#        for item in aut_id:
-#            await bot.send_message(item, 'Привет👋\nЯ твой виртуальный помощник 🤖. Мои разработчики не могут определиться как меня называть. Они мне сказали, что важно мнение каждого сотрудника и попросили спросить у тебя. Отправь, пожалуйста, свой вариант моего имени ответом на это сообщение.')
-
-#        await send_dir(message)
-#        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @lisenokstr Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=kb_client)
-        #aut_id.append(message.from_user.id)
+        await message.answer('Пиши в личку')
 
 # Проверка на авторизацию
 def autentication(message):
+    global aut_id
     for item in aut_id:
-        if message.chat.id == item:
+        if message == item:
             return True
 
 
