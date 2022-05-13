@@ -86,15 +86,21 @@ async def display_of_current_news(message: types.Message):
         await bot.send_message(message.from_user.id, "Нет актуальных новостей")
 
 
+@dp.message_handler(Text(equals='Акции'))
+async def display_of_current_news(message: types.Message):
+    await bot.send_message(message.from_user.id, 'Раздел в разработке')
+    await message.delete()
 
 
 async def scheduler():
-    #aioschedule.every().seconds.at(f"{message.text}")
-    aioschedule.every(3).seconds.do(asck_news)
-    aioschedule.every(3).seconds.do(google.id_docks)
-    aioschedule.every(3).seconds.do(google.get_news)
-    aioschedule.every().hours.do(google.open_driveID)
-    while True:
-        await aioschedule.run_pending()
-        await asyncio.sleep(1)
+    try:
+        aioschedule.every().hours.do(asck_news)
+        aioschedule.every().hours.do(google.id_docks)
+        aioschedule.every().hours.do(google.get_news)
+        aioschedule.every().hours.do(google.open_driveID)
+        while True:
+            await aioschedule.run_pending()
+            await asyncio.sleep(1)
+    except:
+        await asyncio.sleep(30)
 

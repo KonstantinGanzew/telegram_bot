@@ -111,7 +111,6 @@ async def sample_applications(message: types.Message):
 @dp.message_handler(Text(equals='Приказы'))
 async def sample_applications(message: types.Message):
     name_org = search_company(message.from_user.id)
-    print(name_org)
     name_file = google.search_file(name_org, 2)
     for name in name_file:
         await bot.send_document(message.from_user.id, open(name, 'rb'))
@@ -120,7 +119,8 @@ async def sample_applications(message: types.Message):
 
 @dp.message_handler(Text(equals='Регламенты'))
 async def sample_applications(message: types.Message):
-    pass
+    await bot.send_message(message.from_user.id, 'Раздел в разработке')
+    await message.delete()
 
 
 @dp.message_handler(Text(equals='Положения'))
@@ -134,7 +134,8 @@ async def sample_applications(message: types.Message):
 
 @dp.message_handler(Text(equals='Уставные документы'))
 async def sample_applications(message: types.Message):
-    pass
+    await bot.send_message(message.from_user.id, 'Раздел в разработке')
+    await message.delete()
 
 
 @dp.message_handler(Text(equals='Карты партнера'))
@@ -153,4 +154,5 @@ async def sample_applications(message: types.Message):
 
 @dp.message_handler(Text(equals='Листы мотивации'))
 async def sample_applications(message: types.Message):
-    pass
+    await bot.send_message(message.from_user.id, 'Раздел в разработке')
+    await message.delete()

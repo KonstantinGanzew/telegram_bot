@@ -3,8 +3,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
 # Кнопки для главного меню
-#main_key = ['Новости', 'Документы', 'Персонал', 'EBITDA', 'Прямая связь', 'О компании']
-main_key = ['Новости', 'Документы', 'Персонал', 'О компании']
+main_key = ['Новости', 'Документы', 'Персонал', 'EBITDA', 'Прямая связь', 'О компании']
 kb_client = ReplyKeyboardMarkup(resize_keyboard=True)
 for item in main_key:
     kb_client.insert(KeyboardButton(item))
