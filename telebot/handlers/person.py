@@ -18,20 +18,27 @@ async def take_first_state(message: types.Message, state: FSMContext):
     await state.finish()
     it = 0
     for staff in staf:
-        s = ''
-        for i in staff:
-            s  += i.strip().lower() + ' '
-            if s.find(name_key.lower()) != -1:
-                await bot.send_message(message.from_user.id, f'Имя: {staff[1]}\nФамилия: {staff[0]}\nОтчество: {staff[2]}\nДата рождения: {staff[4]}\nНомер телефона: +7{staff[7]}\nЛичный email: {staff[6]}\nКомпания: {staff[8]}\nДолжность: {staff[9]}')
-                await asyncio.sleep(1)
-                if staff[7] != '':
-                    await bot.send_contact(message.from_user.id, f'+7{staff[7]}', f'{staff[0]} {staff[1]}')
-                else:
-                    await bot.send_message(message.from_user.id, 'Нет контакта')
-                await asyncio.sleep(1)
-                it += 1
-                break
-        s = ''
+        if name_key.lower() not in ['автотрейд', 'ип васильев', 'ип терехов', 'сервис плюс', 'ск моторс', 'таско-моторс', 'таско-трейд']:
+            s = ''
+            for i in staff:
+                s  += i.strip().lower() + ' '
+                if s.find(name_key.lower()) != -1:
+                    if len(staff) == 11:
+                        await bot.send_message(message.from_user.id, f'Имя: {staff[1]}\nФамилия: {staff[0]}\nОтчество: {staff[2]}\nДата рождения: {staff[4]}\nНомер телефона: +7{staff[7]}\nЛичный email: {staff[6]}\nКомпания: {staff[8]}\nДолжность: {staff[9]}\nКорпоративный email: {staff[10]}')
+                    else:
+                        await bot.send_message(message.from_user.id, f'Имя: {staff[1]}\nФамилия: {staff[0]}\nОтчество: {staff[2]}\nДата рождения: {staff[4]}\nНомер телефона: +7{staff[7]}\nЛичный email: {staff[6]}\nКомпания: {staff[8]}\nДолжность: {staff[9]}')
+                    await asyncio.sleep(1)
+                    if staff[7] != '':
+                        await bot.send_contact(message.from_user.id, f'+7{staff[7]}', f'{staff[0]} {staff[1]}')
+                    else:
+                        await bot.send_message(message.from_user.id, 'Нет контакта')
+                    await asyncio.sleep(1)
+                    it += 1
+                    break
+            s = ''
+        else:
+            it = 2
+            break
     if it == 0:
         await bot.send_message(message.from_user.id, "Контакт не найден")
     else:

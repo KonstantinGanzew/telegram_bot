@@ -40,15 +40,17 @@ async def asck_news():
             if i in ACTUAL_NEWS:
                 continue
             elif d11 >= d21:
-                name_doc = google.save_file(i[4].split('=')[-1])
-                doc = open(name_doc, 'rb')
-                if name_doc.split('.')[-1] == 'jpg':
-                    await bot.send_photo(-1001469485742, doc, i[3])
-                    ACTUAL_NEWS.append(i)
+                if i[4] != '':
+                    name_doc = google.save_files(i[4].split('=')[-1])
+                    doc = open(name_doc, 'rb')
+                    if name_doc.split('.')[-1] == 'jpg':
+                        await bot.send_photo(225923687, doc, i[3])
+                    else:
+                        await bot.send_message(225923687, i[3])
+                        await bot.send_document(225923687, open(name_doc, 'rb'))
                 else:
-                    await bot.send_message(-1001469485742, i[3])
-                    await bot.send_document(-1001469485742, open(name_doc, 'rb'))
-                    ACTUAL_NEWS.append(i)
+                    await bot.send_message(225923687, i[3])
+                ACTUAL_NEWS.append(i)
                 print('Новость опубликована')
         
 
@@ -73,13 +75,16 @@ async def display_of_current_news(message: types.Message):
             if d1 > d2:
                 ACTUAL_NEWS.remove(i)
             elif d11 >= d21 and d31 >= d11:
-                name_doc = google.save_file(i[4].split('=')[-1])
-                doc = open(name_doc, 'rb')
-                if name_doc.split('.')[-1] == 'jpg':
-                    await bot.send_photo(message.from_user.id, doc, i[3])
+                if i[4] != '':
+                    name_doc = google.save_files(i[4].split('=')[-1])
+                    doc = open(name_doc, 'rb')
+                    if name_doc.split('.')[-1] == 'jpg':
+                        await bot.send_photo(message.from_user.id, doc, i[3])
+                    else:
+                        await bot.send_message(message.from_user.id, i[3])
+                        await bot.send_document(message.from_user.id, open(name_doc, 'rb'))
                 else:
                     await bot.send_message(message.from_user.id, i[3])
-                    await bot.send_document(message.from_user.id, open(name_doc, 'rb'))
             else:
                 ACTUAL_NEWS.remove(i)
     else:
@@ -94,7 +99,7 @@ async def display_of_current_news(message: types.Message):
 
 async def scheduler():
     try:
-        aioschedule.every().hours.do(asck_news)
+        aioschedule.every(5).seconds.do(asck_news)
         aioschedule.every().hours.do(google.id_docks)
         aioschedule.every().hours.do(google.get_news)
         aioschedule.every().hours.do(google.open_driveID)

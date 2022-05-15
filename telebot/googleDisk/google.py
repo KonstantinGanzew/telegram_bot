@@ -25,9 +25,9 @@ ID_TEL = []
 EMPLOYEES = []
 ACTUAL_NEWS = []
 
-CREDENTIALS_FILE = '/bot/googleDisk/creeds.json'
+#CREDENTIALS_FILE = '/bot/googleDisk/creeds.json'
 #CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
-#CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
+CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
 
 # Получаем сотрудников
 async def open_driveID():
