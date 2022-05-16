@@ -12,6 +12,7 @@ from googleDisk import google
 
 
 ACTUAL_NEWS = []
+ACTUAL_ACT = []
 
 async def command_news(message: types.Message):
     await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_news)
@@ -21,6 +22,7 @@ async def command_news(message: types.Message):
 # Отправим актуальные новости в группу -618154662 -1001469485742 225923687
 async def asck_news():
     global ACTUAL_NEWS
+    global ACTUAL_ACT
     d1 = int(datetime.datetime.now().strftime("%Y%m%d"))
     d11 = int(datetime.datetime.now().strftime("%H%M%S"))
     for i in google.ACTUAL_NEWS:
@@ -37,7 +39,7 @@ async def asck_news():
         d3 = int(date1[2] + date1[1] + date1[0])
         d31 = int(date2[0] + date2[1] + date2[2])
         if d1 >= d2 and d3 >= d1:
-            if i in ACTUAL_NEWS:
+            if i in ACTUAL_NEWS or ACTUAL_ACT:
                 continue
             elif d11 >= d21:
                 if i[4] != '':
@@ -50,8 +52,10 @@ async def asck_news():
                         await bot.send_document(225923687, open(name_doc, 'rb'))
                 else:
                     await bot.send_message(225923687, i[3])
-                ACTUAL_NEWS.append(i)
-                print('Новость опубликована')
+                if i[2] == 'Акции':
+                    ACTUAL_ACT.append(i)
+                else:
+                    ACTUAL_NEWS.append(i)
         
 
 
@@ -89,11 +93,43 @@ async def display_of_current_news(message: types.Message):
                 ACTUAL_NEWS.remove(i)
     else:
         await bot.send_message(message.from_user.id, "Нет актуальных новостей")
+    await message.delete()
 
 
 @dp.message_handler(Text(equals='Акции'))
 async def display_of_current_news(message: types.Message):
-    await bot.send_message(message.from_user.id, 'Раздел в разработке')
+    global ACTUAL_ACT
+    d1 = int(datetime.datetime.now().strftime("%Y%m%d"))
+    d11 = int(datetime.datetime.now().strftime("%H%M%S"))
+    if len(ACTUAL_NEWS) != 0:
+        for i in ACTUAL_NEWS:
+            date = i[5].split()
+            date1 = date[0].split('.')
+            date2 = date[1].split(':')
+            d2 = int(date1[2] + date1[1] + date1[0])
+            d21 = int(date2[0] + date2[1] + date2[2])
+            date = i[6].split()
+            date1 = date[0].split('.')
+            date2 = date[1].split(':')
+            d3 = int(date1[2] + date1[1] + date1[0])
+            d31 = int(date2[0] + date2[1] + date2[2])
+            if d1 > d2:
+                ACTUAL_ACT.remove(i)
+            elif d11 >= d21 and d31 >= d11:
+                if i[4] != '':
+                    name_doc = google.save_files(i[4].split('=')[-1])
+                    doc = open(name_doc, 'rb')
+                    if name_doc.split('.')[-1] == 'jpg':
+                        await bot.send_photo(message.from_user.id, doc, i[3])
+                    else:
+                        await bot.send_message(message.from_user.id, i[3])
+                        await bot.send_document(message.from_user.id, open(name_doc, 'rb'))
+                else:
+                    await bot.send_message(message.from_user.id, i[3])
+            else:
+                ACTUAL_ACT.remove(i)
+    else:
+        await bot.send_message(message.from_user.id, "Нет актуальных акций")
     await message.delete()
 
 
