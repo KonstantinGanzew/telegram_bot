@@ -1,8 +1,8 @@
+import copy
 import datetime
 import aioschedule
 import logging
 import asyncio
-from googleDisk import google
 from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Text
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
@@ -46,13 +46,13 @@ async def asck_news():
                     name_doc = google.save_files(i[4].split('=')[-1])
                     doc = open(name_doc, 'rb')
                     if name_doc.split('.')[-1] == 'jpg':
-                        await bot.send_photo(225923687, doc, i[3])
+                        await bot.send_photo(-1001469485742, doc, i[3])
                     else:
-                        await bot.send_message(225923687, i[3])
-                        await bot.send_document(225923687, open(name_doc, 'rb'))
+                        await bot.send_message(-1001469485742, i[3])
+                        await bot.send_document(-1001469485742, open(name_doc, 'rb'))
                 else:
-                    await bot.send_message(225923687, i[3])
-                if i[2] == 'Акции':
+                    await bot.send_message(-1001469485742, i[3])
+                if i[2] == 'Акция':
                     ACTUAL_ACT.append(i)
                 else:
                     ACTUAL_NEWS.append(i)
@@ -64,6 +64,7 @@ async def display_of_current_news(message: types.Message):
     global ACTUAL_NEWS
     d1 = int(datetime.datetime.now().strftime("%Y%m%d"))
     d11 = int(datetime.datetime.now().strftime("%H%M%S"))
+    act = copy.copy(ACTUAL_NEWS)
     if len(ACTUAL_NEWS) != 0:
         for i in ACTUAL_NEWS:
             date = i[5].split()
@@ -77,7 +78,7 @@ async def display_of_current_news(message: types.Message):
             d3 = int(date1[2] + date1[1] + date1[0])
             d31 = int(date2[0] + date2[1] + date2[2])
             if d1 > d2:
-                ACTUAL_NEWS.remove(i)
+                act.remove(i)
             elif d11 >= d21 and d31 >= d11:
                 if i[4] != '':
                     name_doc = google.save_files(i[4].split('=')[-1])
@@ -89,10 +90,9 @@ async def display_of_current_news(message: types.Message):
                         await bot.send_document(message.from_user.id, open(name_doc, 'rb'))
                 else:
                     await bot.send_message(message.from_user.id, i[3])
-            else:
-                ACTUAL_NEWS.remove(i)
     else:
         await bot.send_message(message.from_user.id, "Нет актуальных новостей")
+    ACTUAL_NEWS = act
     await message.delete()
 
 
@@ -101,8 +101,9 @@ async def display_of_current_news(message: types.Message):
     global ACTUAL_ACT
     d1 = int(datetime.datetime.now().strftime("%Y%m%d"))
     d11 = int(datetime.datetime.now().strftime("%H%M%S"))
-    if len(ACTUAL_NEWS) != 0:
-        for i in ACTUAL_NEWS:
+    act = copy.copy(ACTUAL_ACT)
+    if len(ACTUAL_ACT) != 0:
+        for i in ACTUAL_ACT:
             date = i[5].split()
             date1 = date[0].split('.')
             date2 = date[1].split(':')
@@ -114,7 +115,7 @@ async def display_of_current_news(message: types.Message):
             d3 = int(date1[2] + date1[1] + date1[0])
             d31 = int(date2[0] + date2[1] + date2[2])
             if d1 > d2:
-                ACTUAL_ACT.remove(i)
+                act.remove(i)
             elif d11 >= d21 and d31 >= d11:
                 if i[4] != '':
                     name_doc = google.save_files(i[4].split('=')[-1])
@@ -126,18 +127,17 @@ async def display_of_current_news(message: types.Message):
                         await bot.send_document(message.from_user.id, open(name_doc, 'rb'))
                 else:
                     await bot.send_message(message.from_user.id, i[3])
-            else:
-                ACTUAL_ACT.remove(i)
     else:
         await bot.send_message(message.from_user.id, "Нет актуальных акций")
+    ACTUAL_ACT = act
     await message.delete()
 
 
 async def scheduler():
     try:
         aioschedule.every(5).seconds.do(asck_news)
-        aioschedule.every().hours.do(google.id_docks)
-        aioschedule.every().hours.do(google.get_news)
+        aioschedule.every(5).seconds.do(google.id_docks)
+        aioschedule.every(5).seconds.do(google.get_news)
         aioschedule.every().hours.do(google.open_driveID)
         while True:
             await aioschedule.run_pending()
