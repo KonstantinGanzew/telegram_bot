@@ -46,13 +46,13 @@ async def asck_news():
                     name_doc = google.save_files(i[4].split('=')[-1])
                     doc = open(name_doc, 'rb')
                     if name_doc.split('.')[-1] == 'jpg':
-                        await bot.send_photo(225923687, doc, i[3])
+                        await bot.send_photo(-1001469485742, doc, i[3])
                     else:
-                        await bot.send_message(225923687, i[3])
-                        await bot.send_document(225923687, open(name_doc, 'rb'))
+                        await bot.send_message(-1001469485742, i[3])
+                        await bot.send_document(-1001469485742, open(name_doc, 'rb'))
                 else:
-                    await bot.send_message(225923687, i[3])
-                if i[2] == 'Акции':
+                    await bot.send_message(-1001469485742, i[3])
+                if i[2] == 'Акция':
                     ACTUAL_ACT.append(i)
                 else:
                     ACTUAL_NEWS.append(i)
@@ -136,7 +136,7 @@ async def display_of_current_news(message: types.Message):
 async def scheduler():
     try:
         aioschedule.every(5).seconds.do(asck_news)
-        aioschedule.every().hours.do(google.id_docks)
+        aioschedule.every(5).seconds.do(google.id_docks)
         aioschedule.every().hours.do(google.get_news)
         aioschedule.every().hours.do(google.open_driveID)
         while True:
