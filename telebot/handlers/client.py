@@ -3,7 +3,7 @@ from aiogram.dispatcher.filters import Command, Text
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from create_bot import dp, bot
 from keyboards import kb_client, kb_direct, kb_docks
-from handlers import news, company, direct, docks, EBITDA, person
+from handlers import news, company, direct, docks, EBITDA, person, feedback
 from googleDisk import google
 
 

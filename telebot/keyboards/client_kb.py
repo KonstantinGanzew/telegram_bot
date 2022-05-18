@@ -19,7 +19,6 @@ for item in news_key:
 # Кнопки для документов
 docks_key = ['Образцы заявлений', 
              'Приказы', 
-             'Регламенты', 
              'Положения', 
              'Уставные документы', 
              'Карты партнера', 
@@ -28,6 +27,43 @@ docks_key = ['Образцы заявлений',
 kb_docks = ReplyKeyboardMarkup(resize_keyboard=True)
 for item in docks_key:
     kb_docks.insert(KeyboardButton(item))
+
+# Кнопки для положений
+provisions_key = ['О коммерческой тайне',
+                  'О компании',
+                  'О персональных данных',
+                  'Об оплате труда работников',
+                  'О пропускном режиме',
+                  'Hазaд']
+kb_provisions_key = ReplyKeyboardMarkup(resize_keyboard=True)
+for item in provisions_key:
+    kb_provisions_key.insert(KeyboardButton(item))
+
+# Кнопки карт партнера
+partner_cards_key = ['ТАСКО-МОТОРС',
+                 'ТАСКО-трейд',
+                 'Автотрейд',
+                 'СК Моторс',
+                 'Сервис Плюс',
+                 'ИП Терехов',
+                 'ИП Васильев',
+                 'Hазaд']
+kb_partner_cards = ReplyKeyboardMarkup(resize_keyboard=True)
+for item in partner_cards_key:
+    kb_partner_cards.insert(KeyboardButton(item))
+
+# Кнопки для фирменных бланков
+letterhead_key = ['ТАСКО-МОТОРС',
+                 'ТАСКО-трейд',
+                 'Автотрейд',
+                 'СК Моторс',
+                 'Сервис Плюс',
+                 'ИП Терехов',
+                 'ИП Васильев',
+                 'Hазaд']
+kb_letterhead = ReplyKeyboardMarkup(resize_keyboard=True)
+for item in letterhead_key:
+    kb_letterhead.insert(item)
 
 # Кнопки для персонала
 person_key = ['🔍 Сотрудники компании', 
