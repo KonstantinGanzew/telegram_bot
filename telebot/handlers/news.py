@@ -77,9 +77,7 @@ async def display_of_current_news(message: types.Message):
             date2 = date[1].split(':')
             d3 = int(date1[2] + date1[1] + date1[0])
             d31 = int(date2[0] + date2[1] + date2[2])
-            if d1 > d2:
-                act.remove(i)
-            elif d11 >= d21 and d31 >= d11:
+            if d11 >= d21 and d31 >= d11:
                 if i[4] != '':
                     name_doc = google.save_files(i[4].split('=')[-1])
                     doc = open(name_doc, 'rb')
@@ -90,6 +88,8 @@ async def display_of_current_news(message: types.Message):
                         await bot.send_document(message.from_user.id, open(name_doc, 'rb'))
                 else:
                     await bot.send_message(message.from_user.id, i[3])
+            else:
+                act.remove(i)
     else:
         await bot.send_message(message.from_user.id, "Нет актуальных новостей")
     ACTUAL_NEWS = act
