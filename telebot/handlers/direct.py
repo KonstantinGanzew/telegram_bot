@@ -36,7 +36,7 @@ async def first_message_for_feedback(message: types.Message, state: FSMContext):
 async def second_message_for_feedback(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['photo'] = message.photo[-1].file_id
-    await bot.send_photo(-618154662, data['photo'], str(data['mes']))
+    await bot.send_photo(1001720658480, data['photo'], str(data['mes']))
     await state.finish()
 
 
@@ -51,7 +51,7 @@ async def personalized(message: types.Message):
 async def anonymous_to_director(message: types.Message, state: FSMContext):
     message_text = message.text
     await state.finish()
-    await bot.send_message(-618154662, f'От: {message.from_user.full_name}\nОбращение: {message_text}')
+    await bot.send_message(331398137, f'Имя: {message.from_user.full_name}\nID: @{message.from_user.username}\nОбращение: {message_text}')
 
 @dp.message_handler(Text(equals='Анонимно'), state=None)
 async def anonymously(message: types.Message):
@@ -63,4 +63,4 @@ async def anonymously(message: types.Message):
 async def not_anonymous_to_director(message: types.Message, state: FSMContext):
     message_text = message.text
     await state.finish()
-    await bot.send_message(-618154662, f'Анонимно\nОбращение: {message_text}')
+    await bot.send_message(331398137, f'Анонимно\nОбращение: {message_text}')

@@ -4,6 +4,7 @@ WORKDIR /bot
 
 COPY . /bot
 
+RUN apt-get install tzdata
 RUN pip install aiogram
 RUN pip install asyncio
 RUN pip install aioschedule

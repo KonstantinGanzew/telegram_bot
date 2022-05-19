@@ -1,7 +1,3 @@
-import os
-import logging
-import asyncio
-import io
 from webbrowser import get
 import httplib2
 import apiclient.discovery
@@ -23,17 +19,17 @@ ID_TEL = []
 EMPLOYEES = []
 ACTUAL_NEWS = []
 
-#CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
-CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
+CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
+#CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
 
 # Получаем сотрудников
-async def open_driveID():
+def open_driveID():
     global ID_TEL
     global EMPLOYEES
     ID_TEL = []
     EMPLOYEES = []
     # ID Google Sheets документа (можно взять из его URL)
-    spreadsheet_id = '1TLIT1BHPWw-00tF8PNHdyny1FJp5OAQB2ukXiUmyY-0'
+    spreadsheet_id = '19Ez9Endd_Qcg7QqRoZdrfKspxyatb17Lbo9O1dZ30QY'
 
     # Авторизуемся и получаем service — экземпляр доступа к API
     credentials = ServiceAccountCredentials.from_json_keyfile_name(
@@ -46,105 +42,19 @@ async def open_driveID():
     # Читаем файл и заполняем кортеж идшниками
     values = service.spreadsheets().values().get(
         spreadsheetId=spreadsheet_id,
-        range='A1:K1000',
+        range="A1:J19",
         majorDimension='ROWS'
     ).execute()
-    val = values.pop('values')
-    for item in val:
-        ID_TEL.append(item[5].replace(' ', ''))
-        EMPLOYEES.append(item)
+    spreadsheet = service.spreadsheets().create(body = {
+    'properties': {'title': 'Бюджет 2022 г.', 'locale': 'ru_RU'},
+    'sheets': [{'properties': {'sheetType': 'GRID',
+                               'sheetId': 378550121,
+                               'title': 'Dashboard',
+                               'gridProperties': {'rowCount': 1, 'columnCount': 16}}}]
+    }).execute()
 
-async def get_news():
-    global ACTUAL_NEWS
-    ACTUAL_NEWS = []
-    # ID Google Sheets документа
-    spreadsheet_id = '1IHR2-KftLdq1swsr0G3Nqb9VpWGypdlrF7AgG1jd3bc'
+    print(values)
+    print(spreadsheet)
+    
 
-    # Авторизуемся и получаем service — экземпляр доступа к API
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-    CREDENTIALS_FILE,
-    ['https://www.googleapis.com/auth/spreadsheets',
-    'https://www.googleapis.com/auth/drive'])
-    httpAuth = credentials.authorize(httplib2.Http())
-    service = apiclient.discovery.build('sheets', 'v4', http = httpAuth)
-
-    # Читаем файл и заполняем кортеж идшниками
-    values = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheet_id,
-        range='A3:G1000',
-        majorDimension='ROWS'
-    ).execute()
-    val = values.pop('values')
-    for item in val:
-        ACTUAL_NEWS.append(item)
-
-
-# Заносим пожелание на диск не использоваемый функционал
-def down_drive(first_name, username, text):
-    # ID Google Sheets документа (можно взять из его URL)
-    spreadsheet_id = '1gqmdEgkMGGo6XHB4l0akIUkQN7ExZJGHh797fGS6l0E'
-
-    # Авторизуемся и получаем service — экземпляр доступа к API
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        CREDENTIALS_FILE,
-        ['https://www.googleapis.com/auth/spreadsheets',
-        'https://www.googleapis.com/auth/drive'])
-    httpAuth = credentials.authorize(httplib2.Http())
-    service = apiclient.discovery.build('sheets', 'v4', http = httpAuth)
-
-    list = [[first_name], [username], [text]]
-
-    resource = {
-        "majorDimension": "COLUMNS",
-        "values": list
-    }
-    range = "Sheet1!A:C"
-    service.spreadsheets().values().append(
-        spreadsheetId=spreadsheet_id,
-        range=range,
-        body=resource,
-        valueInputOption="USER_ENTERED"
-    ).execute()
-
-
-def save_file(parend_id, file_id):
-    SCOPES = ['https://www.googleapis.com/auth/drive']
-    credentials = service_account.Credentials.from_service_account_file(
-        CREDENTIALS_FILE, scopes=SCOPES)
-    service = build('drive', 'v3', credentials=credentials)
-    results = service.files().list(
-        pageSize=1000, 
-        fields="files(id, name, mimeType, parents, createdTime)",
-        q=f"'{parend_id}' in parents").execute()
-    file_name = ''
-    for i in results['files']:
-        if i['id'] == file_id:
-            file_name = i['name'].lower()
-            break
-    request = service.files().get_media(fileId=file_id)
-    fh = io.BytesIO()
-    downloader = MediaIoBaseDownload(fd=fh, request=request)
-    done = False
-    while not done:
-        done = downloader.next_chunk()
-        fh.seek(0)
-
-        with open(os.path.join(file_name), 'wb') as f:
-            f.write(fh.read())
-            f.close()
-    return file_name
-
-# Скачиваем файл с диска
-def search_file(name_org, number_folder):
-    SCOPES = ['https://www.googleapis.com/auth/drive']
-    credentials = service_account.Credentials.from_service_account_file(
-        CREDENTIALS_FILE, scopes=SCOPES)
-    service = build('drive', 'v3', credentials=credentials)
-    id_fl = ID_FOLDER.get(name_org)[number_folder]
-    results = service.files().list(pageSize=20, fields="files(id, name, mimeType, parents, createdTime)", q=f"'{id_fl}' in parents").execute()
-    name_file = []
-    for i in results.pop('files'):
-        id = i.pop('id') 
-        name_file.append(save_file(id_fl, id))
-    return name_file
-
+open_driveID()

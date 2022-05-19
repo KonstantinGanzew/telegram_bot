@@ -53,13 +53,13 @@ for item in partner_cards_key:
     kb_partner_cards.insert(KeyboardButton(item))
 
 # Кнопки для фирменных бланков
-letterhead_key = ['ТАСКО-МОТОРС',
-                 'ТАСКО-трейд',
-                 'Автотрейд',
-                 'СК Моторс',
-                 'Сервис Плюс',
-                 'ИП Терехов',
-                 'ИП Васильев',
+letterhead_key = ['ТАСКО-МОТОРC',
+                 'ТАСКO-трейд',
+                 'Aвтотрейд',
+                 'CК Моторс',
+                 'Cервис Плюс',
+                 'ИП Tерехов',
+                 'ИП Bасильев',
                  'Hазaд']
 kb_letterhead = ReplyKeyboardMarkup(resize_keyboard=True)
 for item in letterhead_key:
