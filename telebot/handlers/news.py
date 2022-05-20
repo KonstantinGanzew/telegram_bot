@@ -10,6 +10,15 @@ from create_bot import dp, bot
 from keyboards import kb_news
 from googleDisk import google
 
+"""date = i[5].split()
+        date1 = date[0].split('.')
+        date2 = date[1].split(':')
+        d1 = datetime(int(date1[2]), int(date1[1]), int(date1[0]), int(date2[0], int(date[1]), int(date[2])))
+        d2 = int(date1[2] + date1[1] + date1[0])
+        date = i[6].split()
+        date1 = date[0].split('.')
+        date2 = date[1].split(':')
+        d1 = datetime(int(date1[2]), int(date1[1]), int(date1[0]), int(date2[0], int(date[1]), int(date[2])))"""
 
 ACTUAL_NEWS = []
 ACTUAL_ACT = []

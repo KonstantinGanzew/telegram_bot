@@ -5,6 +5,7 @@ WORKDIR /bot
 COPY . /bot
 
 RUN apt-get install tzdata
+RUN timedatectl set-timezone Asia/Yekaterinburg
 RUN pip install aiogram
 RUN pip install asyncio
 RUN pip install aioschedule

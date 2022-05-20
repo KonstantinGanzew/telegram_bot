@@ -1,60 +1,63 @@
-from webbrowser import get
-import httplib2
-import apiclient.discovery
-from oauth2client.service_account import ServiceAccountCredentials
-from google.oauth2 import service_account
-from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
+from __future__ import print_function
+
+import os.path
+
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
-#  название организации     Образцы заявлений                    положения                            приказы
-ID_FOLDER = {'Автотрейд': ['1w0bXnZDHgYrM5hawUkH5CvmOoAPnedV7', '19zigzNaeTNWKe1BmL8oTJi7aReDhifNr', '1kdrDGDtbxLU0g38hbjWIWwbpZRbdwYzk'], 
-             'ИП Васильев': ['1huMRi6BgY1VU8Ts55KIRbpmQ13ui58LM', '', '1bd2LgRH0l3eh9kNYSBCBYenbUDLQMiN_'], # Нету в положении
-             'ИП Терехов': ['1Y-bj95Ch1K-dDjkDOtOK2uhD0Nf2QqjC', '1rTd_NMU1uK9cvBZ9cGBik6vuLwVhpR0k', '1y11HuGaDHUGKFPCfXz5ewdqzt3UhCSCg'],
-             'Сервис Плюс': ['1vlM7nS5zVEtfmF8hpVXiULgDn3OtsIH_', '', '1lyDUNCsxKlMtu0xmla-7yum5uzJvQDlJ'], # Нету в положении
-             'СК Моторс': ['1Upch3gks8dCc5ZZKQ9dsPEO1a-6_1iNc', '1wJFoKmu1AvNAtCQxV5SCLXAiiHopWYX3', '1P8xmwwfXYtyl-5GFqVjh42ASNnDJTk5i'],
-             'ТАСКО-МОТОРС': ['11QKQA4u6ZWVKuAX0GOlFEGifgDTxsM-P' '1sMQ2tm599P1ecFwN736G0Xa3wNPArH2S', '18uTcupE90lY-Ni3WnJXMikG7B1e9unLu'],
-             'ТАСКО-трейд': ['1Un7zNPRHmxP1rP949MT_bKTOxZvUgNnD', '1dyG19CFPXGyGqYiZdC1UfN6adKR399sj', '17TxJZ6SudqijH32ktnmnDvPHXFd6uG2k']}
+# If modifying these scopes, delete the file token.json.
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
-ID_TEL = []
-EMPLOYEES = []
-ACTUAL_NEWS = []
+# The ID and range of a sample spreadsheet.
+SAMPLE_SPREADSHEET_ID = '19Ez9Endd_Qcg7QqRoZdrfKspxyatb17Lbo9O1dZ30QY'
+SAMPLE_RANGE_NAME = 'Dashbord!A1:J19'
 
-CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
-#CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
 
-# Получаем сотрудников
-def open_driveID():
-    global ID_TEL
-    global EMPLOYEES
-    ID_TEL = []
-    EMPLOYEES = []
-    # ID Google Sheets документа (можно взять из его URL)
-    spreadsheet_id = '19Ez9Endd_Qcg7QqRoZdrfKspxyatb17Lbo9O1dZ30QY'
+def main():
+    """Shows basic usage of the Sheets API.
+    Prints values from a sample spreadsheet.
+    """
+    creds = None
+    # The file token.json stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('token.json', 'w') as token:
+            token.write(creds.to_json())
 
-    # Авторизуемся и получаем service — экземпляр доступа к API
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-    CREDENTIALS_FILE,
-    ['https://www.googleapis.com/auth/spreadsheets',
-    'https://www.googleapis.com/auth/drive'])
-    httpAuth = credentials.authorize(httplib2.Http())
-    service = apiclient.discovery.build('sheets', 'v4', http = httpAuth)
+    try:
+        service = build('sheets', 'v4', credentials=creds)
 
-    # Читаем файл и заполняем кортеж идшниками
-    values = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheet_id,
-        range="A1:J19",
-        majorDimension='ROWS'
-    ).execute()
-    spreadsheet = service.spreadsheets().create(body = {
-    'properties': {'title': 'Бюджет 2022 г.', 'locale': 'ru_RU'},
-    'sheets': [{'properties': {'sheetType': 'GRID',
-                               'sheetId': 378550121,
-                               'title': 'Dashboard',
-                               'gridProperties': {'rowCount': 1, 'columnCount': 16}}}]
-    }).execute()
+        # Call the Sheets API
+        sheet = service.spreadsheets()
+        result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+                                    range=SAMPLE_RANGE_NAME).execute()
+        values = result.get('values', [])
 
-    print(values)
-    print(spreadsheet)
-    
+        if not values:
+            print('No data found.')
+            return
 
-open_driveID()
+        print('Name, Major:')
+        for row in values:
+            # Print columns A and E, which correspond to indices 0 and 4.
+            print('%s, %s' % (row[0], row[4]))
+    except HttpError as err:
+        print(err)
+
+
+if __name__ == '__main__':
+    main()
