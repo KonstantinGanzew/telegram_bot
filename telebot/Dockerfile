@@ -5,7 +5,8 @@ WORKDIR /bot
 COPY . /bot
 
 RUN apt-get install tzdata
-RUN timedatectl set-timezone Asia/Yekaterinburg
+ENV TZ=Asia/Yekaterinburg
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN pip install aiogram
 RUN pip install asyncio
 RUN pip install aioschedule
