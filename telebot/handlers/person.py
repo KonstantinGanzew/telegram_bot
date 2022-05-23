@@ -18,7 +18,7 @@ async def take_first_state(message: types.Message, state: FSMContext):
     await state.finish()
     it = 0
     for staff in staf:
-        if name_key.lower() not in ['автотрейд', 'ип васильев', 'ип терехов', 'сервис плюс', 'ск моторс', 'таско-моторс', 'таско-трейд']:
+        if name_key.lower() not in staff[8].lower():
             s = ''
             for i in staff:
                 s  += i.strip().lower() + ' '
@@ -36,11 +36,14 @@ async def take_first_state(message: types.Message, state: FSMContext):
                     it += 1
                     break
             s = ''
+        elif name_key.lower() in staff[8].lower():
+            await bot.send_message(message.from_user.id, 'Контакт не найден')
+            break
         else:
             it = 2
             break
     if it == 0:
-        await bot.send_message(message.from_user.id, "Контакт не найден")
+        await bot.send_message(message.from_user.id, 'Контакт не найден')
     else:
         it = 0
 

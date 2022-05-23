@@ -30,7 +30,7 @@ for item in docks_key:
 
 # Кнопки для положений
 provisions_key = ['О коммерческой тайне',
-                  'О компании',
+                  'O компании',
                   'О персональных данных',
                   'Об оплате труда работников',
                   'О пропускном режиме',
@@ -119,4 +119,14 @@ sample_key = ['Выход из отпуска, уход за ребёнком',
               'Hазaд']
 kb_sample = ReplyKeyboardMarkup(resize_keyboard=True)
 for item in sample_key:
-    kb_sample.add(item)
+    kb_sample.insert(item)
+
+# Кнопки для уставных документов
+statutory_documents_key = ['ТAСКО-МОТОРС',
+                           'ТAСКО-трейд',
+                           'Автoтрейд',
+                           'СK Моторс',
+                           'Сeрвис Плюс']
+kb_statory_documents = ReplyKeyboardMarkup(resize_keyboard=True)
+for item in statutory_documents_key:
+    kb_statory_documents.insert(item)

@@ -51,7 +51,7 @@ async def personalized(message: types.Message):
 async def anonymous_to_director(message: types.Message, state: FSMContext):
     message_text = message.text
     await state.finish()
-    await bot.send_message(331398137, f'Имя: {message.from_user.full_name}\nID: @{message.from_user.username}\nОбращение: {message_text}')
+    await bot.send_message(331398137, f'Имя: {message.from_user.full_name}\nID: @{message.from_user.username}\nНомер: +7{}\nОбращение: {message_text}')
 
 @dp.message_handler(Text(equals='Анонимно'), state=None)
 async def anonymously(message: types.Message):

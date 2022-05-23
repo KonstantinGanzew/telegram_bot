@@ -4,7 +4,7 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Text
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from create_bot import dp, bot
-from keyboards import kb_docks, kb_sample, kb_provisions_key, kb_partner_cards, kb_letterhead
+from keyboards import kb_docks, kb_sample, kb_provisions_key, kb_partner_cards, kb_letterhead, kb_statory_documents
 from googleDisk import google
 
 def search_company(mes):
@@ -136,7 +136,7 @@ async def sample_applications(message: types.Message):
 
 @dp.message_handler(Text(equals='Уставные документы'))
 async def sample_applications(message: types.Message):
-    await bot.send_message(message.from_user.id, 'Раздел в разработке')
+    await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_statory_documents)
     await message.delete()
 
 
@@ -177,7 +177,7 @@ async def about_trade_secret(message: types.Message):
     await message.delete()
 
 
-@dp.message_handler(Text(equals='О компании'))
+@dp.message_handler(Text(equals='O компании'))
 async def about_company(message: types.Message):
     name_org = search_company(message.from_user.id)
     name_file = google.search_filename(name_org, 'О компании')
@@ -301,5 +301,39 @@ async def IP_Terekhov(message: types.Message):
 @dp.message_handler(Text(equals='ИП Bасильев'))
 async def IP_Vasiliev(message: types.Message):
     name_file = google.search_filename('ИП Васильев', 'Фирменный бланк')
+    await bot.send_document(message.from_user.id, open(name_file, 'rb'))
+    await message.delete()
+
+
+#<----------------------------------Блок с уставом---------------------------------->
+
+
+@dp.message_handler(Text(equals='ТAСКО-МОТОРС'))
+async def TASCO_MOTORS(message: types.Message):
+    name_file = google.search_filename('ТАСКО-МОТОРС', 'Устав')
+    await bot.send_document(message.from_user.id, open(name_file, 'rb'))
+    await message.delete()
+
+@dp.message_handler(Text(equals='ТAСКО-трейд'))
+async def TASCO_MOTORS(message: types.Message):
+    name_file = google.search_filename('ТАСКО-трейд', 'Устав')
+    await bot.send_document(message.from_user.id, open(name_file, 'rb'))
+    await message.delete()
+
+@dp.message_handler(Text(equals='Автoтрейд'))
+async def TASCO_MOTORS(message: types.Message):
+    name_file = google.search_filename('Автотрейд', 'Устав')
+    await bot.send_document(message.from_user.id, open(name_file, 'rb'))
+    await message.delete()
+
+@dp.message_handler(Text(equals='СK Моторс'))
+async def TASCO_MOTORS(message: types.Message):
+    name_file = google.search_filename('СК Моторс', 'Устав')
+    await bot.send_document(message.from_user.id, open(name_file, 'rb'))
+    await message.delete()
+
+@dp.message_handler(Text(equals='Сeрвис Плюс'))
+async def TASCO_MOTORS(message: types.Message):
+    name_file = google.search_filename('Сервис Плюс', 'Устав')
     await bot.send_document(message.from_user.id, open(name_file, 'rb'))
     await message.delete()

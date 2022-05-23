@@ -1,2 +1,2 @@
 from keyboards.client_kb import kb_client, kb_news, kb_docks, kb_person, kb_company, kb_partner_cards, kb_letterhead, kb_provisions_key
-from keyboards.client_kb import kb_direct, kb_dir_send, kb_answer, kb_sample
+from keyboards.client_kb import kb_direct, kb_dir_send, kb_answer, kb_sample, kb_statory_documents
