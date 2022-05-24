@@ -8,6 +8,17 @@ from keyboards import kb_direct, kb_dir_send
 from handlers import feedback
 from handlers import not_anonymous_send
 from handlers import anonymous_send
+from googleDisk import google
+
+def search_company(mes):
+    staff = google.EMPLOYEES
+    for st in staff:
+        for s in st:
+            try:
+                if int(s) == mes:
+                    return st[7]
+            except:
+                continue
 
 async def command_direct(message: types.Message):
     await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_direct)
@@ -51,7 +62,7 @@ async def personalized(message: types.Message):
 async def anonymous_to_director(message: types.Message, state: FSMContext):
     message_text = message.text
     await state.finish()
-    await bot.send_message(331398137, f'Имя: {message.from_user.full_name}\nID: @{message.from_user.username}\nНомер: +7{}\nОбращение: {message_text}')
+    await bot.send_message(331398137, f'Имя: {message.from_user.full_name}\nID: @{message.from_user.username}\nНомер: +7{search_company(message.from_user.id)}\nОбращение: {message_text}')
 
 @dp.message_handler(Text(equals='Анонимно'), state=None)
 async def anonymously(message: types.Message):

@@ -20,6 +20,7 @@ ID_FOLDER = {'Автотрейд': ['1w0bXnZDHgYrM5hawUkH5CvmOoAPnedV7', '19zigz
              'ТАСКО-трейд': ['1Un7zNPRHmxP1rP949MT_bKTOxZvUgNnD', '1dyG19CFPXGyGqYiZdC1UfN6adKR399sj', '17TxJZ6SudqijH32ktnmnDvPHXFd6uG2k']}
 
 ID_DOCKS = dict()
+ID_ORDERS = []
 
 ID_TEL = []
 EMPLOYEES = []
@@ -85,6 +86,7 @@ async def get_news():
 
 async def id_docks():
     global ID_DOCKS
+    global ID_ORDERS
     # ID Google Sheets документа (можно взять из его URL)
     spreadsheet_id = '1xnd2KtknGSb8s7oc7dYvaMpad_liFR54x5MhwgT3DYU'
 
@@ -99,16 +101,19 @@ async def id_docks():
     # Читаем файл и заполняем кортеж идшниками
     values = service.spreadsheets().values().get(
         spreadsheetId=spreadsheet_id,
-        range='E2:G1000',
+        range='B2:G1000',
         majorDimension='ROWS'
     ).execute()
     val = values.pop('values')
     for item in val:
-        try:
-            ID_DOCKS[item[2]][item[1]] = item[0].split('=')[-1]
-        except:
-            ID_DOCKS.update({item[2]: {item[1]: item[0].split('=')[-1]}})
-    
+        if item[0] != 'Приказы':
+            try:
+                ID_DOCKS[item[5]][item[4]] = item[3].split('=')[-1]
+            except Exception:
+                ID_DOCKS.update({item[5]: {item[4]: item[3].split('=')[-1]}})
+        else:
+            ID_ORDERS.append(item[4], item[5], item[3].split('=')[-1])
+
 
 # Заносим пожелание на диск не использоваемый функционал
 def down_drive(first_name, username, text):

@@ -2,10 +2,12 @@ import asyncio
 from handlers import client
 from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Text
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.dispatcher import FSMContext
 from create_bot import dp, bot
 from keyboards import kb_docks, kb_sample, kb_provisions_key, kb_partner_cards, kb_letterhead, kb_statory_documents
 from googleDisk import google
+from handlers import tags
 
 def search_company(mes):
     staff = google.EMPLOYEES
@@ -111,10 +113,23 @@ async def sample_applications(message: types.Message):
 @dp.message_handler(Text(equals='Приказы'))
 async def sample_applications(message: types.Message):
     name_org = search_company(message.from_user.id)
-    name_file = google.search_file(name_org, 2)
-    for name in name_file:
-        await bot.send_document(message.from_user.id, open(name, 'rb'))
-        await asyncio.sleep(1)
+    id_tag = ''
+    for tag in google.ID_ORDERS:
+        if name_org == tag[1] or 'все компании' == tag[1]:
+            if tag[1].find(id_tag) == -1:
+                id_tag += f'{tag[0]}\n'
+    await bot.send_message(message.from_user.id, f'Введите один из хештегов:\n{id_tag}')
+    await tags.tags.tag.set()
+    
+
+@dp.message_handler(state=tags.tags.tag.set)
+async def first_message_for_feedback(message: types.Message, state: FSMContext):
+    tags = message.text.lower()
+    await state.finish()
+    for tag in google.ID_ORDERS:
+        if tag[1] == tags:
+            name_file = google.save_files(tag[2])
+            await bot.send_document(message.from_user.id, open(name_file, 'rb'))
 
 
 @dp.message_handler(Text(equals='Регламенты'))
@@ -127,11 +142,6 @@ async def sample_applications(message: types.Message):
 async def sample_applications(message: types.Message):
     await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_provisions_key)
     await message.delete()
-    #name_org = search_company(message.from_user.id)
-    #name_file = google.save_file(name_org, 1)
-    #for name in name_file:
-    #    await bot.send_document(message.from_user.id, open(name, 'rb'))
-    #    await asyncio.sleep(1)
 
 
 @dp.message_handler(Text(equals='Уставные документы'))
@@ -144,18 +154,12 @@ async def sample_applications(message: types.Message):
 async def sample_applications(message: types.Message):
     await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_partner_cards)
     await message.delete()
-    #name_file = google.search_filename(search_company(message.from_user.id), 'Карта партнера')
-    #await bot.send_document(message.from_user.id, open(name_file, 'rb'))
-    #await message.delete()
 
 
 @dp.message_handler(Text(equals='Фирменные бланки'))
 async def sample_applications(message: types.Message):
     await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_letterhead)
     await message.delete()
-    #name_file = google.search_filename(search_company(message.from_user.id), 'Фирменный бланк')
-    #await bot.send_document(message.from_user.id, open(name_file, 'rb'))
-    #await message.delete()
 
 
 @dp.message_handler(Text(equals='Листы мотивации'))
