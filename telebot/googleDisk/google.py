@@ -112,7 +112,7 @@ async def id_docks():
             except Exception:
                 ID_DOCKS.update({item[5]: {item[4]: item[3].split('=')[-1]}})
         else:
-            ID_ORDERS.append(item[4], item[5], item[3].split('=')[-1])
+            ID_ORDERS.append([item[4], item[5], item[3].split('=')[-1]])
 
 
 # Заносим пожелание на диск не использоваемый функционал
