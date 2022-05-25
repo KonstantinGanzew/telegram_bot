@@ -26,9 +26,9 @@ ID_TEL = []
 EMPLOYEES = []
 ACTUAL_NEWS = []
 
-CREDENTIALS_FILE = '/bot/googleDisk/creeds.json'
+#CREDENTIALS_FILE = '/bot/googleDisk/creeds.json'
 #CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
-#CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
+CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
 
 # Получаем сотрудников
 async def open_driveID():
@@ -87,6 +87,8 @@ async def get_news():
 async def id_docks():
     global ID_DOCKS
     global ID_ORDERS
+    ID_DOCKS = dict()
+    ID_ORDERS = []
     # ID Google Sheets документа (можно взять из его URL)
     spreadsheet_id = '1xnd2KtknGSb8s7oc7dYvaMpad_liFR54x5MhwgT3DYU'
 

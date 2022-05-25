@@ -110,26 +110,29 @@ async def sample_applications(message: types.Message):
     await message.delete()
 
 
-@dp.message_handler(Text(equals='Приказы'))
+@dp.message_handler(Text(equals='Приказы'), state=None)
 async def sample_applications(message: types.Message):
     name_org = search_company(message.from_user.id)
     id_tag = ''
     for tag in google.ID_ORDERS:
         if name_org == tag[1] or 'все компании' == tag[1]:
-            if tag[1].find(id_tag) == -1:
-                id_tag += f'{tag[0]}\n'
+            if id_tag.find(tag[0]) == -1:
+                id_tag += tag[0] + '\n'
     await bot.send_message(message.from_user.id, f'Введите один из хештегов:\n{id_tag}')
     await tags.tags.tag.set()
     
 
-@dp.message_handler(state=tags.tags.tag.set)
+@dp.message_handler(state=tags.tags.tag)
 async def first_message_for_feedback(message: types.Message, state: FSMContext):
     tags = message.text.lower()
-    await state.finish()
+    name_org = search_company(message.from_user.id)
     for tag in google.ID_ORDERS:
-        if tag[1] == tags:
+        if tag[0] == tags and (name_org == tag[1] or 'все компании' == tag[1]):
             name_file = google.save_files(tag[2])
             await bot.send_document(message.from_user.id, open(name_file, 'rb'))
+        else:
+            continue
+    await state.finish()
 
 
 @dp.message_handler(Text(equals='Регламенты'))
