@@ -47,7 +47,7 @@ async def first_message_for_feedback(message: types.Message, state: FSMContext):
 async def second_message_for_feedback(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['photo'] = message.photo[-1].file_id
-    await bot.send_photo(1001720658480, data['photo'], str(data['mes']))
+    await bot.send_photo(-1001720658480, data['photo'], str(data['mes']))
     await state.finish()
 
 
