@@ -18,7 +18,7 @@ async def command_start(message: types.Message):
             if autentication(message.from_user.id):
                 await send_dir(message)
             else:
-                await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @lisenokstr Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}')
+                await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @Adelya_la Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}')
     except:
         await message.answer('Пиши в личку')
 
