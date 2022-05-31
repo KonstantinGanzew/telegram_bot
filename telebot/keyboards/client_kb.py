@@ -126,7 +126,8 @@ statutory_documents_key = ['ТAСКО-МОТОРС',
                            'ТAСКО-трейд',
                            'Автoтрейд',
                            'СK Моторс',
-                           'Сeрвис Плюс']
+                           'Сeрвис Плюс',
+                           'Hазaд']
 kb_statory_documents = ReplyKeyboardMarkup(resize_keyboard=True)
 for item in statutory_documents_key:
     kb_statory_documents.insert(item)
