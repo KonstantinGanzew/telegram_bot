@@ -10,6 +10,7 @@ from handlers import not_anonymous_send
 from handlers import anonymous_send
 from googleDisk import google
 
+# В данном методе ищем номер сотрудника по его телеграм ид
 def search_company(mes):
     staff = google.EMPLOYEES
     for st in staff:
@@ -20,6 +21,7 @@ def search_company(mes):
             except:
                 continue
 
+# Отлавливаем нажатие кнопки "Прямая связь", отправляем следующие кнопки 'Передать проблему', 'Обращение к директору', 'Назад'
 async def command_direct(message: types.Message):
     await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_direct)
     await message.delete()
@@ -33,7 +35,8 @@ async def appeal_to_the_director(message: types.Message):
 @dp.message_handler(Text(equals='Передать проблему'), state=None)
 async def submit_problem(message: types.Message):
     await feedback.var_name.mes.set()
-    await bot.send_message(message.from_user.id, 'Необходимо написать сообщение проблемы')
+    kb_without_photo = ReplyKeyboardMarkup(resize_keyboard=True).add('Отправить без фотографии')
+    await bot.send_message(message.from_user.id, 'Необходимо написать сообщение проблемы', reply_markup=kb_without_photo)
     await message.delete()
 
 @dp.message_handler(state=feedback.var_name.mes)
@@ -49,9 +52,26 @@ async def second_message_for_feedback(message: types.Message, state: FSMContext)
         data['photo'] = message.photo[-1].file_id
     await bot.send_photo(-1001720658480, data['photo'], str(data['mes']))
     await state.finish()
+    await bot.send_message(message.from_user.id, 'Обращение отправленно', reply_markup=kb_direct)
+
+@dp.message_handler(Text(equals='Отправить без фотографии'), state='*')
+async def send_message_without_photo(message: types.Message, state: FSMContext):
+    message_text = message.text
+    await bot.send_message(-1001720658480, f'Имя: {message.from_user.full_name}\nID: @{message.from_user.username}\nНомер: +7{search_company(message.from_user.id)}\nОбращение: {message_text}')
+    await state.finish()
+    await bot.send_message(message.from_user.id, 'Обращение отправленно', reply_markup=kb_direct)
 
 
+#<-----------------------------------------Персональное----------------------------------------->
 
+
+""" 
+    Отправляем сообщение директору, имя, ид, номер, сотрудника
+    В первом блоке отплавливаем нажатие кнопки "Персонализировано"
+    Далее запускаем машину состояния на первое сообщение и ожидаем пока оно придет от пользователя,
+    после закрываем работу машины состояния и чистим буфер, отправляем сообщения полученые от пользователя
+
+"""
 @dp.message_handler(Text(equals='Персонализировано'), state=None)
 async def personalized(message: types.Message):
     await not_anonymous_send.messages.mes.set()
@@ -63,7 +83,19 @@ async def anonymous_to_director(message: types.Message, state: FSMContext):
     message_text = message.text
     await state.finish()
     await bot.send_message(185161895, f'Имя: {message.from_user.full_name}\nID: @{message.from_user.username}\nНомер: +7{search_company(message.from_user.id)}\nОбращение: {message_text}')
+    await bot.send_message(message.from_user.id, 'Обращение отправленно')
 
+
+#<-----------------------------------------Персональное----------------------------------------->
+
+
+""" 
+    Отправляем сообщение директору анонимно
+    В первом блоке отплавливаем нажатие кнопки "Персонализировано"
+    Далее запускаем машину состояния на первое сообщение и ожидаем пока оно придет от пользователя,
+    после закрываем работу машины состояния и чистим буфер, отправляем сообщения полученые от пользователя
+
+"""
 @dp.message_handler(Text(equals='Анонимно'), state=None)
 async def anonymously(message: types.Message):
     await anonymous_send.not_messages.mes.set()
@@ -75,3 +107,4 @@ async def not_anonymous_to_director(message: types.Message, state: FSMContext):
     message_text = message.text
     await state.finish()
     await bot.send_message(185161895, f'Анонимно\nОбращение: {message_text}')
+    await bot.send_message(message.from_user.id, 'Обращение отправленно анонимно')
