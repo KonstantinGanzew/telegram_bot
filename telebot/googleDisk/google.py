@@ -25,6 +25,7 @@ ID_ORDERS = []
 ID_TEL = []
 EMPLOYEES = []
 ACTUAL_NEWS = []
+SEARCH_PERSON = []
 
 CREDENTIALS_FILE = '/bot/googleDisk/creeds.json'
 #CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
@@ -34,6 +35,7 @@ CREDENTIALS_FILE = '/bot/googleDisk/creeds.json'
 async def open_driveID():
     global ID_TEL
     global EMPLOYEES
+    global SEARCH_PERSON
     ID_TEL = []
     EMPLOYEES = []
     # ID Google Sheets документа (можно взять из его URL)
@@ -56,6 +58,7 @@ async def open_driveID():
     val = values.pop('values')
     for item in val:
         EMPLOYEES.append(item)
+        SEARCH_PERSON.append([item[0], item[1], item[7], item[9]])
         if item[5] != '':
             ID_TEL.append(int(item[5].replace(' ', '')))
 

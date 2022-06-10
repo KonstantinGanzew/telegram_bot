@@ -13,7 +13,7 @@ from handlers import search_state
 
 @dp.message_handler(state=search_state.var_name)
 async def take_first_state(message: types.Message, state: FSMContext):
-    staf = google.EMPLOYEES
+    """staf = google.EMPLOYEES
     name_key = message.text
     await state.finish()
     it = 0
@@ -49,7 +49,31 @@ async def take_first_state(message: types.Message, state: FSMContext):
     if it == 0:
         await bot.send_message(message.from_user.id, 'Контакт не найден')
     else:
-        it = 0
+        it = 0"""
+    staff = google.SEARCH_PERSON
+    employes = google.EMPLOYEES
+    name_key = message.text.capitalize()
+    await state.finish()
+    for i, a in enumerate(staff):
+        s = ''
+        if name_key in a:
+            s = f'Фамилия: {employes[i][0]}\nИмя: {employes[i][1]}\nОтчество: {employes[i][2]}\nДата рождения: {employes[i][4]}\n'
+            if employes[i][6] != '':
+                s += f'Личный email: {employes[i][6]}\n'
+            if employes[i][7] != '':
+                s += f'Номер телефона: +7{employes[i][7]}\n'
+            if employes[i][8] != '':
+                s += f'Компания: {employes[i][8]}\n'
+            if employes[i][9] != '':
+                s += f'Должность: {employes[i][9]}'
+            if employes[i][7] != '':
+                await bot.send_message(message.from_user.id, s)
+                await bot.send_contact(message.from_user.id, f'+7{employes[i][7]}', f'{employes[i][0]} {employes[i][1]}')
+            else:
+                await bot.send_message(message.from_user.id, s)
+        await asyncio.sleep(1)
+
+
 
 async def command_person(message: types.Message):
     await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_person)

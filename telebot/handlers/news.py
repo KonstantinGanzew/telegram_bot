@@ -51,12 +51,12 @@ async def asck_news():
                 name_doc = google.save_files(i[4].split('=')[-1])
                 doc = open(name_doc, 'rb')
                 if name_doc.split('.')[-1] == 'jpg':
-                    await bot.send_photo(-1001469485742, doc, i[3])
+                    await bot.send_photo(225923687, doc, i[3])
                 else:
-                    await bot.send_message(-1001469485742, i[3])
-                    await bot.send_document(-1001469485742, open(name_doc, 'rb'))
+                    await bot.send_message(225923687, i[3])
+                    await bot.send_document(225923687, open(name_doc, 'rb'))
             else:
-                await bot.send_message(-1001469485742, i[3])
+                await bot.send_message(225923687, i[3])
             if i[2] == 'Акция':
                 ACTUAL_ACT.append(i)
             else:
