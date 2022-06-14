@@ -118,7 +118,7 @@ async def sample_applications(message: types.Message):
         if name_org == tag[1] or 'все компании' == tag[1]:
             if id_tag.find(tag[0]) == -1:
                 id_tag += tag[0] + '\n'
-    await bot.send_message(message.from_user.id, f'Введите один из хештегов:\n{id_tag}')
+    await bot.send_message(message.from_user.id, f'Введите запрос через #:\n{id_tag}')
     await tags.tags.tag.set()
     
 
