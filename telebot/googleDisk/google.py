@@ -38,6 +38,7 @@ async def open_driveID():
     global SEARCH_PERSON
     ID_TEL = []
     EMPLOYEES = []
+    SEARCH_PERSON = []
     # ID Google Sheets документа (можно взять из его URL)
     spreadsheet_id = '1TLIT1BHPWw-00tF8PNHdyny1FJp5OAQB2ukXiUmyY-0'
 
@@ -52,12 +53,18 @@ async def open_driveID():
     # Читаем файл и заполняем кортеж идшниками
     values = service.spreadsheets().values().get(
         spreadsheetId=spreadsheet_id,
-        range='A1:K1000',
+        range='A1:M1000',
         majorDimension='ROWS'
     ).execute()
     val = values.pop('values')
     for item in val:
-        EMPLOYEES.append(item)
+        if len(item) < 13:
+            listitem = [c for c in item]
+            for i in range(13 - len(listitem)):
+                listitem.append('')
+            EMPLOYEES.append(listitem)
+        else:
+            EMPLOYEES.append(item)
         SEARCH_PERSON.append([item[0], item[1], item[7], item[9]])
         if item[5] != '':
             ID_TEL.append(int(item[5].replace(' ', '')))

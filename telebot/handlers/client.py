@@ -7,12 +7,10 @@ from handlers import news, company, direct, docks, EBITDA, person, feedback
 from googleDisk import google
 
 
-aut_id = []
+aut_id = google.ID_TEL
 
 # Обрабатываем комманды
 async def command_start(message: types.Message):
-    global aut_id
-    aut_id = google.ID_TEL
     try:
         if message.chat.id != -1001469485742:
             if autentication(message.from_user.id):

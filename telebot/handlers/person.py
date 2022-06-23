@@ -26,7 +26,9 @@ async def take_first_state(message: types.Message, state: FSMContext):
     for i, a in enumerate(staff):
         s = ''
         if name_key in ' '.join(a):
-            s = f'Фамилия: {employes[i][0]}\nИмя: {employes[i][1]}\nОтчество: {employes[i][2]}\nДата рождения: {employes[i][4]}\n'
+            s = f'Фамилия: {employes[i][0]}\nИмя: {employes[i][1]}\nОтчество: {employes[i][2]}\n'
+            if employes[i][6] != '':
+                s += f'Дата рождения: {employes[i][4]}\n'
             if employes[i][6] != '':
                 s += f'Личный email: {employes[i][6]}\n'
             if employes[i][7] != '':
@@ -34,15 +36,32 @@ async def take_first_state(message: types.Message, state: FSMContext):
             if employes[i][8] != '':
                 s += f'Компания: {employes[i][8]}\n'
             if employes[i][9] != '':
-                s += f'Должность: {employes[i][9]}'
+                s += f'Должность: {employes[i][9]}\n'
+            if employes[i][12] != '':
+                s += f'Внутрений номер: {employes[i][12]}'
             if employes[i][7] != '':
-                await asyncio.sleep(1)
-                await bot.send_message(message.from_user.id, s)
-                await asyncio.sleep(1)
-                await bot.send_contact(message.from_user.id, f'+7{employes[i][7]}', f'{employes[i][0]} {employes[i][1]}')
+                if employes[i][11] != '':
+                    name_photo = employes[i][11].split('/')
+                    photo = google.save_files(name_photo[5])
+                    doc = open(photo, 'rb')
+                    await bot.send_photo(message.from_user.id, doc, s)
+                    await asyncio.sleep(1)
+                    await bot.send_contact(message.from_user.id, f'+7{employes[i][7]}', f'{employes[i][0]} {employes[i][1]}', vcard=s)
+                else:
+                    await asyncio.sleep(1)
+                    await bot.send_message(message.from_user.id, s)
+                    await asyncio.sleep(1)
+                    await bot.send_contact(message.from_user.id, f'+7{employes[i][7]}', f'{employes[i][0]} {employes[i][1]}')
             else:
-                await asyncio.sleep(1)
-                await bot.send_message(message.from_user.id, s)
+                if employes[i][11] != '':
+                    name_photo = employes[i][11].split('/')
+                    photo = google.save_files(name_photo[5])
+                    doc = open(photo, 'rb')
+                    await asyncio.sleep(1)
+                    await bot.send_photo(message.from_user.id, doc, s)
+                else:
+                    await asyncio.sleep(1)
+                    await bot.send_message(message.from_user.id, s)
             finds = False
     if finds:
         await bot.send_message(message.from_user.id, "Контакт не найдет")
