@@ -128,7 +128,7 @@ async def scheduler():
         aioschedule.every(5).seconds.do(asck_news)
         aioschedule.every(5).seconds.do(google.id_docks)
         aioschedule.every(5).seconds.do(google.get_news)
-        aioschedule.every().hours.do(google.open_driveID)
+        aioschedule.every(5).seconds.do(google.open_driveID)
         while True:
             await aioschedule.run_pending()
             await asyncio.sleep(1)
