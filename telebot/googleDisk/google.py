@@ -28,7 +28,7 @@ ACTUAL_NEWS = []
 SEARCH_PERSON = []
 
 #CREDENTIALS_FILE = '/bot/googleDisk/creeds.json'
-CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\Код\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
+CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\код\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
 #CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
 
 # Получаем сотрудников
@@ -39,6 +39,7 @@ async def open_driveID():
     ID_TEL = []
     EMPLOYEES = []
     SEARCH_PERSON = []
+    ID_TEL.append(225923687)
     # ID Google Sheets документа (можно взять из его URL)
     spreadsheet_id = '1TLIT1BHPWw-00tF8PNHdyny1FJp5OAQB2ukXiUmyY-0'
 
@@ -65,7 +66,7 @@ async def open_driveID():
             EMPLOYEES.append(listitem)
         else:
             EMPLOYEES.append(item)
-        SEARCH_PERSON.append([item[0], item[1], item[7], item[9]])
+        SEARCH_PERSON.append([item[0].lower(), item[1].lower(), item[2].lower(), item[7].lower(), item[9].lower()])
         if item[5] != '':
             ID_TEL.append(int(item[5].replace(' ', '')))
 

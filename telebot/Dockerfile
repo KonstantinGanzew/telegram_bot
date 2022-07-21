@@ -1,19 +1,21 @@
-FROM python
+# Контейнер с необходимым для работы бота
+# 1. Импортируем контейнер с питоном
+# 2. Доставляем необходимые библиотеки
+# 3. Устанавливаем часовой пояс
 
-WORKDIR /bot
+FROM alpine
 
-COPY . /bot
-
-RUN apt-get install tzdata
+RUN apk update 
+RUN apk add python3
+RUN apk add py-pip
+RUN apk add tzdata
 ENV TZ=Asia/Yekaterinburg
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-RUN pip install aiogram
-RUN pip install asyncio
-RUN pip install aioschedule
-RUN pip install datetime
-RUN pip install --upgrade pip
-RUN pip install --upgrade google-api-python-client
-RUN pip install --upgrade oauth2client 
-RUN pip install bs4
-
-CMD [ "python3", "bot_telegram.py" ]
+RUN pip3 install aiogram
+RUN pip3 install asyncio
+RUN pip3 install aioschedule
+RUN pip3 install datetime
+RUN pip3 install --upgrade pip
+RUN pip3 install --upgrade google-api-python-client
+RUN pip3 install --upgrade oauth2client 
+RUN pip3 install bs4
