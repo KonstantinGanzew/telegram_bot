@@ -6,3 +6,6 @@ from handlers import docks
 from handlers import EBITDA
 from handlers import person
 from handlers import admin
+from handlers import feedback
+from handlers import anonymous_send
+from handlers import not_anonymous_send
