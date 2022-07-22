@@ -27,7 +27,7 @@ def get_pages_count(html):
 # Получаем содержание главной строницы, собираем резюме всех пользователей
 def get_content(html):
     soup = BeautifulSoup(html, 'html.parser')
-    items = soup.find_all('div', class_='vacancy-serp-item')
+    items = soup.find_all('div', class_='vacancy-serp-item__layout')
 
     vacancy = []
 
@@ -60,4 +60,4 @@ def parse(true):
             print('Error')
     TRUE = False
 
-parse(TRUE)
+print(parse(True))

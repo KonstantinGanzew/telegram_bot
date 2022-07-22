@@ -43,7 +43,7 @@ async def take_first_state(message: types.Message, state: FSMContext):
                 if employes[i][11] != '':
                     name_photo = employes[i][11].split('/')
                     photo = google.save_files(name_photo[5])
-                    if photo.find('jpeg') != -1:
+                    if photo.find('jpeg') != -1 or photo.find('jpg') != -1:
                         doc = open(photo, 'rb')
                         await bot.send_photo(message.from_user.id, doc, s)
                         await asyncio.sleep(1)
@@ -59,7 +59,7 @@ async def take_first_state(message: types.Message, state: FSMContext):
                 if employes[i][11] != '':
                     name_photo = employes[i][11].split('/')
                     photo = google.save_files(name_photo[5])
-                    if photo.find('jpeg') != -1:
+                    if photo.find('jpeg') != -1 or photo.find('jpg') != -1:
                         doc = open(photo, 'rb')
                         await asyncio.sleep(1)
                         await bot.send_photo(message.from_user.id, doc, s)
@@ -70,7 +70,7 @@ async def take_first_state(message: types.Message, state: FSMContext):
                     await bot.send_message(message.from_user.id, s)
             finds = False
     if finds:
-        await bot.send_message(message.from_user.id, "Контакт не найдет")
+        await bot.send_message(message.from_user.id, "Контакт не найден")
 
 
 
