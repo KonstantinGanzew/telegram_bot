@@ -2,7 +2,6 @@ import os
 import logging
 import asyncio
 import io
-from webbrowser import get
 import httplib2
 import apiclient.discovery
 from oauth2client.service_account import ServiceAccountCredentials
