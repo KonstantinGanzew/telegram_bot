@@ -27,8 +27,8 @@ EMPLOYEES = []
 ACTUAL_NEWS = []
 SEARCH_PERSON = []
 
-#CREDENTIALS_FILE = '/bot/googleDisk/creeds.json'
-CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\код\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
+CREDENTIALS_FILE = '/bot/googleDisk/creeds.json'
+#CREDENTIALS_FILE = 'C:\\Users\\gantcev_k2312\\Desktop\\код\\Тест\\telegram_bot\\telebot\\googleDisk\\creeds.json'
 #CREDENTIALS_FILE = 'D:\\project\\telegabot\\telebot\\googleDisk\\creeds.json'
 
 # Получаем сотрудников
