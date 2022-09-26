@@ -33,7 +33,7 @@ def get_content(html):
 
     for item in items:
 #        resurse = HOST + item.find( 'a', class_='resume-search-item__name').get('href')
-        vacancy.append(item.find('a', class_='bloko-link').get('href'))
+        vacancy.append(item.find('a', class_='serp-item__title').get('href'))
     return vacancy
 
 
@@ -59,5 +59,3 @@ def parse(true):
         else:
             print('Error')
     TRUE = False
-
-print(parse(True))

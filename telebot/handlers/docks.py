@@ -216,6 +216,12 @@ async def pass_mode(message: types.Message):
     await message.delete()
 
 
+@dp.message_handler(Text(equals='ПВТР'))
+async def pass_mode(message: types.Message):
+    name_file = google.save_files('18qR3wqu7F9hKMRJhtupdu93V3EJEZ-vw')
+    await bot.send_document(message.from_user.id, open(name_file, 'rb'))
+    await message.delete()
+
 
 #<----------------------------------Карты партнера---------------------------------->
 

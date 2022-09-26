@@ -6,7 +6,7 @@ from keyboards import kb_client, kb_direct, kb_docks
 from handlers import news, company, direct, docks, EBITDA, person, feedback
 from googleDisk import google
 
-
+name_OK = '@denis_chekin'
 
 # Обрабатываем комманды
 async def command_start(message: types.Message):
@@ -15,7 +15,7 @@ async def command_start(message: types.Message):
             if autentication(message.from_user.id):
                 await send_dir(message.from_user.id)
             else:
-                await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @Adelya_la Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}')
+                await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте {name_OK} Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}')
     except Exception as e:
         await message.answer('Пиши в личку')
         print(e)
@@ -40,7 +40,7 @@ async def point_new(message: types.Message):
     if autentication(message.from_user.id):
         await news.command_news(message)
     else:
-        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @Adelya_la Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
+        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте {name_OK} Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
 
 
 # Ввыводим документы
@@ -49,7 +49,7 @@ async def point_docks(message: types.Message):
     if autentication(message.from_user.id):
         await docks.command_docks(message)
     else:
-        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @Adelya_la Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
+        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте {name_OK} Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
 
 
 
@@ -59,7 +59,7 @@ async def point_person(message: types.Message):
     if autentication(message.from_user.id):
         await person.command_person(message)
     else:
-        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @Adelya_la Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
+        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте {name_OK} Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
 
 
 # Ввыводим EBITDA
@@ -68,7 +68,7 @@ async def point_EBITDA(message: types.Message):
     if autentication(message.from_user.id):
         await news.command_news(message)
     else:
-        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @Adelya_la Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
+        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте {name_OK} Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
 
 
 
@@ -78,7 +78,7 @@ async def point_direct(message: types.Message):
     if autentication(message.from_user.id):
         await direct.command_direct(message)
     else:
-        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @Adelya_la Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
+        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте {name_OK} Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
 
 
 # О компании
@@ -87,7 +87,7 @@ async def point_company(message: types.Message):
     if autentication(message.from_user.id):
         await company.command_company(message)
     else:
-        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @Adelya_la Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
+        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте {name_OK} Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
 
 
 
@@ -97,7 +97,7 @@ async def point_company(message: types.Message):
     if autentication(message.from_user.id):
         await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_client)
     else:
-        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @Adelya_la Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
+        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте {name_OK} Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
 
 
 
@@ -107,7 +107,7 @@ async def point_company(message: types.Message):
     if autentication(message.from_user.id):
         await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_direct)
     else:
-        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @Adelya_la Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
+        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте {name_OK} Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
 
 
 
@@ -117,7 +117,7 @@ async def point_company(message: types.Message):
     if autentication(message.from_user.id):
         await bot.send_message(message.from_user.id, 'Выберите пункт', reply_markup=kb_docks)
     else:
-        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте @Adelya_la Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
+        await bot.send_message(message.from_user.id, f'Для доступа к боту отправьте {name_OK} Ваши ФИО, адрес личной электронной почты и id {message.from_user.id}', reply_markup=types.ReplyKeyboardRemove())
 
 
 

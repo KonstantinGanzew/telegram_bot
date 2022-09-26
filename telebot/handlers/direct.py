@@ -36,7 +36,7 @@ async def appeal_to_the_director(message: types.Message):
 @dp.message_handler(Text(equals='Передать проблему'), state=None)
 async def submit_problem(message: types.Message):
     await feedback.var_name.mes.set()
-    kb_without_photo = ReplyKeyboardMarkup(resize_keyboard=True).add('Отправить без фотографии')
+    kb_without_photo = ReplyKeyboardMarkup(resize_keyboard=True).add('Отправить без фотографии').add('Отмена')
     await bot.send_message(message.from_user.id, 'Необходимо написать сообщение проблемы', reply_markup=kb_without_photo)
     await message.delete()
 
@@ -51,13 +51,15 @@ async def first_message_for_feedback(message: types.Message, state: FSMContext):
 async def second_message_for_feedback(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['photo'] = message.photo[-1].file_id
-    await bot.send_photo(-1001720658480, data['photo'], str(data['mes']))
+    mes_text = str(data['mes'])
+    await bot.send_photo(-1001720658480, data['photo'], f'Имя: {message.from_user.full_name}\nID: @{message.from_user.username}\nНомер: +7{search_company(message.from_user.id)}\nОбращение: {mes_text}')
     await state.finish()
     await bot.send_message(message.from_user.id, 'Обращение отправленно', reply_markup=kb_direct)
 
-@dp.message_handler(Text(equals='Отправить без фотографии'), state='*')
+@dp.message_handler(Text(equals='Отправить без фотографии'), state=feedback.var_name.mes)
 async def send_message_without_photo(message: types.Message, state: FSMContext):
-    message_text = message.text
+    async with state.proxy() as data:
+        message_text = data['mes']
     await bot.send_message(-1001720658480, f'Имя: {message.from_user.full_name}\nID: @{message.from_user.username}\nНомер: +7{search_company(message.from_user.id)}\nОбращение: {message_text}')
     await state.finish()
     await bot.send_message(message.from_user.id, 'Обращение отправленно', reply_markup=kb_direct)
@@ -109,3 +111,12 @@ async def not_anonymous_to_director(message: types.Message, state: FSMContext):
     await state.finish()
     await bot.send_message(185161895, f'Анонимно\nОбращение: {message_text}')
     await bot.send_message(message.from_user.id, 'Обращение отправленно анонимно')
+
+
+@dp.message_handler(Text(equals='Отмена'), state='*')
+async def cancel(message: types.Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+    await state.finish
+    await bot.send_message(message.from_user.id, 'Обращение отменено', reply_markup=kb_direct)

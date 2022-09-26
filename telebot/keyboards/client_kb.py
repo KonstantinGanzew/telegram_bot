@@ -34,6 +34,7 @@ provisions_key = ['О коммерческой тайне',
                   'О персональных данных',
                   'Об оплате труда работников',
                   'О пропускном режиме',
+                  'ПВТР',
                   'Hазaд']
 kb_provisions_key = ReplyKeyboardMarkup(resize_keyboard=True)
 for item in provisions_key:
