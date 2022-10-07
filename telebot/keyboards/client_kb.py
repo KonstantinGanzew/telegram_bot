@@ -48,6 +48,7 @@ partner_cards_key = ['ТАСКО-МОТОРС',
                  'Сервис Плюс',
                  'ИП Терехов',
                  'ИП Васильев',
+                 'Орентранс',
                  'Hазaд']
 kb_partner_cards = ReplyKeyboardMarkup(resize_keyboard=True)
 for item in partner_cards_key:

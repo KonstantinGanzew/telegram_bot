@@ -269,7 +269,11 @@ async def IP_Vasiliev(message: types.Message):
     await bot.send_document(message.from_user.id, open(name_file, 'rb'))
     await message.delete()
 
-
+@dp.message_handler(Text(equals='Орентранс'))
+async def IP_Vasiliev(message: types.Message):
+    name_file = google.search_filename('Орентранс', 'Карта партнера')
+    await bot.send_document(message.from_user.id, open(name_file, 'rb'))
+    await message.delete()
 
 #<----------------------------------Фирменные бланки---------------------------------->
 
