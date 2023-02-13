@@ -13,8 +13,8 @@ async def command_start(message: types.Message):
         if message.chat.id != -1001469485742:
             if autentication(message.from_user.id):
                 await send_dir(message.from_user.id)
-        else:
-            await bot.send_message(message.from_user.id, f'Ваш ид {message.from_user.id}')
+            else:
+                await bot.send_message(message.from_user.id, f'Ваш ид {message.from_user.id}')
     except Exception as e:
         await message.answer('Пиши в личку')
         print(e)
